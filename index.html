@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MrTaco Portfolio</title>
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 <link rel="stylesheet" href="luxury.css?v=1">
+<link rel="stylesheet" href="red-theme.css?v=1">
 </head>
 <body>
 <header>
@@ -29,25 +30,38 @@
 </div>
 </div>
 </section>
-<section id="work">
+<section id="work" class="featured-showcase">
 <h2>Featured Work</h2>
-<div class="cards">
-<div class="card">
-<div class="image pvp-visual"><span></span><span></span><span></span><b>KITPVP</b></div>
-<h3>KitPvP Systems</h3>
-<p>Combat systems, CPS counters, leaderboards, crates, ranks, and custom PvP mechanics.</p>
+<div class="showcase-grid">
+<div class="project-card kit-card">
+<div class="project-visual">
+<div class="project-icon">⚔</div>
+<div class="project-copy">
+<span>COMBAT SYSTEM</span>
+<h3>KitPvP</h3>
+<p>Fast PvP systems with CPS tracking, leaderboards, crates, ranks, cooldowns, and smooth combat logic.</p>
+<div class="project-tags"><em>PVP</em><em>CPS</em><em>RANKS</em></div>
 </div>
-<div class="card">
-<div class="image sky-visual"><span></span><span></span><span></span><b>SKYGEN</b></div>
-<h3>SkyGen Systems</h3>
-<p>Generators, plot saving, economy upgrades, and fully automated backend systems.</p>
 </div>
-<div class="card">
-<div class="image boss-render">
-<img src="assets/larix-reaper-boss-card.svg?v=8" alt="Larix Reaper boss model render">
+<div class="project-body"><h3>KitPvP Systems</h3><p>Combat systems, CPS counters, leaderboards, crates, ranks, and custom PvP mechanics.</p></div>
 </div>
-<h3>Boss Fights</h3>
-<p>Cinematic Bedrock bosses with custom models, textures, attack systems, animations, and scripted combat mechanics.</p>
+<div class="project-card sky-card">
+<div class="project-visual">
+<div class="project-icon">◆</div>
+<div class="project-copy">
+<span>SKYGEN CORE</span>
+<h3>SkyGen</h3>
+<p>Generator gameplay with saved plots, upgrades, economy support, automation, and backend persistence.</p>
+<div class="project-tags"><em>GENS</em><em>PLOTS</em><em>ECONOMY</em></div>
+</div>
+</div>
+<div class="project-body"><h3>SkyGen Systems</h3><p>Generators, plot saving, economy upgrades, and fully automated backend systems.</p></div>
+</div>
+<div class="project-card boss-card-new">
+<div class="project-visual boss-visual">
+<img src="assets/larix-reaper-boss-card.svg?v=9" alt="Larix Reaper boss render">
+</div>
+<div class="project-body"><h3>Boss Fights</h3><p>Cinematic Bedrock bosses with custom models, textures, attack systems, animations, and scripted combat mechanics.</p></div>
 </div>
 </div>
 </section>
