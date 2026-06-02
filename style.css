@@ -41,14 +41,14 @@ nav a:hover {
 }
 
 .hero {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
   background: radial-gradient(circle at center, #173b7a 0%, #050816 70%);
-  padding: 0 20px;
+  padding: 120px 20px 80px;
 }
 
 .overlay {
@@ -140,27 +140,99 @@ h2 {
 }
 
 .image {
-  height: 180px;
+  height: 220px;
+  position: relative;
+  overflow: hidden;
 }
 
-.pvp {
-  background: linear-gradient(135deg,#1e3a8a,#2563eb);
+.pvp-visual,
+.sky-visual,
+.boss-render {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
 }
 
-.sky {
-  background: linear-gradient(135deg,#d97706,#facc15);
+.pvp-visual {
+  background: radial-gradient(circle at 50% 35%, #5ea2ff 0%, #173b7a 35%, #050816 100%);
+}
+
+.sky-visual {
+  background: radial-gradient(circle at 50% 35%, #facc15 0%, #d97706 35%, #050816 100%);
+}
+
+.pvp-visual b,
+.sky-visual b {
+  position: relative;
+  z-index: 3;
+  font-size: 32px;
+  letter-spacing: 3px;
+  color: white;
+  text-shadow: 0 0 20px rgba(255,255,255,0.5);
+}
+
+.pvp-visual span,
+.sky-visual span {
+  position: absolute;
+  width: 95px;
+  height: 95px;
+  border-radius: 22px;
+  border: 2px solid rgba(255,255,255,0.25);
+  animation: floatBox 4s ease-in-out infinite;
+}
+
+.pvp-visual span:nth-child(1) {
+  left: 12%;
+  top: 22%;
+  background: rgba(94,162,255,0.25);
+}
+
+.pvp-visual span:nth-child(2) {
+  right: 12%;
+  top: 18%;
+  animation-delay: .5s;
+  background: rgba(37,99,235,0.35);
+}
+
+.pvp-visual span:nth-child(3) {
+  left: 42%;
+  bottom: -25px;
+  animation-delay: 1s;
+  background: rgba(255,255,255,0.08);
+}
+
+.sky-visual span:nth-child(1) {
+  left: 13%;
+  top: 20%;
+  background: rgba(250,204,21,0.3);
+}
+
+.sky-visual span:nth-child(2) {
+  right: 14%;
+  top: 25%;
+  animation-delay: .45s;
+  background: rgba(217,119,6,0.35);
+}
+
+.sky-visual span:nth-child(3) {
+  left: 42%;
+  bottom: -25px;
+  animation-delay: .9s;
+  background: rgba(255,255,255,0.08);
 }
 
 .boss-render {
-  height: auto;
-  padding: 0;
-  overflow: hidden;
-  background: #090909;
+  height: 260px;
+  background: radial-gradient(circle at center, rgba(255,23,68,0.22), #090909 70%);
 }
 
 .boss-render img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+  animation: bossPulse 3.5s ease-in-out infinite;
 }
 
 .card h3 {
@@ -201,6 +273,16 @@ h2 {
   color: #cfd8e5;
 }
 
+@keyframes floatBox {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(8deg); }
+}
+
+@keyframes bossPulse {
+  0%,100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,23,68,0.3)); }
+  50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(255,23,68,0.7)); }
+}
+
 @media(max-width:768px){
   .hero h1 {
     font-size: 42px;
@@ -208,5 +290,17 @@ h2 {
 
   nav {
     display: none;
+  }
+
+  section {
+    padding: 90px 8%;
+  }
+
+  .image {
+    height: 200px;
+  }
+
+  .boss-render {
+    height: 240px;
   }
 }
