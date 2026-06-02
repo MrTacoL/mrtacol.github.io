@@ -151,8 +151,16 @@ h2 {
   background: linear-gradient(135deg,#d97706,#facc15);
 }
 
-.gui {
-  background: linear-gradient(135deg,#7c3aed,#c084fc);
+.boss-render {
+  height: auto;
+  padding: 0;
+  overflow: hidden;
+  background: #090909;
+}
+
+.boss-render img {
+  width: 100%;
+  display: block;
 }
 
 .card h3 {
