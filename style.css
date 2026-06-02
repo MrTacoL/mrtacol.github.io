@@ -1,0 +1,204 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #050816;
+  color: white;
+  overflow-x: hidden;
+}
+
+header {
+  width: 100%;
+  padding: 25px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 25px;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #4e8cff;
+}
+
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  background: radial-gradient(circle at center, #173b7a 0%, #050816 70%);
+  padding: 0 20px;
+}
+
+.overlay {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: #4e8cff;
+  filter: blur(180px);
+  opacity: 0.25;
+}
+
+.content {
+  position: relative;
+  max-width: 850px;
+  z-index: 1;
+}
+
+.small {
+  color: #7ea8ff;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.hero h1 {
+  font-size: 60px;
+  margin-bottom: 25px;
+  line-height: 1.1;
+}
+
+.hero p {
+  color: #b9c2d0;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.buttons {
+  margin-top: 35px;
+}
+
+.buttons a {
+  padding: 15px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  margin: 10px;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.primary {
+  background: linear-gradient(90deg,#2563eb,#5ea2ff);
+  color: white;
+}
+
+.secondary {
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+}
+
+.buttons a:hover {
+  transform: translateY(-3px);
+}
+
+section {
+  padding: 120px 8%;
+}
+
+h2 {
+  font-size: 42px;
+  margin-bottom: 50px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 30px;
+}
+
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: #4e8cff;
+}
+
+.image {
+  height: 180px;
+}
+
+.pvp {
+  background: linear-gradient(135deg,#1e3a8a,#2563eb);
+}
+
+.sky {
+  background: linear-gradient(135deg,#d97706,#facc15);
+}
+
+.gui {
+  background: linear-gradient(135deg,#7c3aed,#c084fc);
+}
+
+.card h3 {
+  font-size: 28px;
+  padding: 25px 25px 10px;
+}
+
+.card p {
+  padding: 0 25px 30px;
+  color: #b9c2d0;
+  line-height: 1.7;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 20px;
+}
+
+.service-grid div {
+  padding: 30px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+
+.contact-card {
+  padding: 40px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.contact-card p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #cfd8e5;
+}
+
+@media(max-width:768px){
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  nav {
+    display: none;
+  }
+}
