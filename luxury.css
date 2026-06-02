@@ -1,0 +1,93 @@
+#skills {
+  margin-top: 80px;
+  padding: 60px 40px;
+  border-radius: 32px;
+  border: 1px solid rgba(255,120,120,0.25);
+  background: radial-gradient(circle at top, rgba(255,80,80,0.08), rgba(0,0,0,0.2));
+  box-shadow: 0 0 60px rgba(255,70,70,0.08);
+}
+
+#skills h2 {
+  color: #ffd4d4;
+  margin-bottom: 35px;
+}
+
+.pill-wrap,
+.mini-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.skill-pill {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,120,120,0.15);
+  color: #f3f3f3;
+  padding: 15px 22px;
+  border-radius: 18px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+
+.skill-pill:hover,
+.skill-pill.active {
+  border-color: rgba(255,120,120,0.8);
+  color: #ffb3b3;
+  background: rgba(255,70,70,0.08);
+  box-shadow: 0 0 25px rgba(255,70,70,0.22);
+  transform: translateY(-3px);
+}
+
+.small-pill {
+  padding: 12px 18px;
+  font-size: 14px;
+}
+
+.lux-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  gap: 28px;
+  margin-top: 40px;
+}
+
+.lux-card {
+  border-radius: 28px;
+  border: 1px solid rgba(255,120,120,0.18);
+  background: rgba(255,255,255,0.03);
+  padding: 34px;
+  transition: .25s ease;
+}
+
+.lux-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 35px rgba(255,70,70,0.14);
+  border-color: rgba(255,120,120,0.45);
+}
+
+.lux-card h3 {
+  font-size: 38px;
+  margin-bottom: 22px;
+  color: #ffe2e2;
+}
+
+.lux-card p {
+  color: #b8b8c5;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+@media(max-width:768px){
+  #skills {
+    padding: 40px 22px;
+  }
+
+  .skill-pill {
+    width: 100%;
+    text-align: left;
+  }
+
+  .lux-card h3 {
+    font-size: 30px;
+  }
+}
