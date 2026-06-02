@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MrTaco Portfolio</title>
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 <header>
 <div class="logo">MrTaco</div>
 <nav>
 <a href="#work">Work</a>
+<a href="#skills">Skills</a>
 <a href="#services">Services</a>
 <a href="#contact">Contact</a>
 </nav>
@@ -42,10 +43,44 @@
 </div>
 <div class="card">
 <div class="image boss-render">
-<img src="assets/larix-reaper-boss-card.svg?v=5" alt="Larix Reaper boss model render">
+<img src="assets/larix-reaper-boss-card.svg?v=7" alt="Larix Reaper boss model render">
 </div>
 <h3>Boss Fights</h3>
 <p>Cinematic Bedrock bosses with custom models, textures, attack systems, animations, and scripted combat mechanics.</p>
+</div>
+</div>
+</section>
+<section id="skills" class="luxury-skills">
+<h2>Core Foundations</h2>
+<div class="pill-wrap">
+<button class="skill-pill">C Programming</button>
+<button class="skill-pill">Python</button>
+<button class="skill-pill">Java</button>
+<button class="skill-pill">JavaScript</button>
+<button class="skill-pill">TypeScript</button>
+<button class="skill-pill">HTML5 / CSS3</button>
+<button class="skill-pill">Character Design</button>
+<button class="skill-pill">UI / UX Design</button>
+</div>
+<div class="lux-grid">
+<div class="lux-card">
+<h3>Backend and Cloud</h3>
+<p>Building secure server systems, APIs, dashboards, automation, and server-side tools.</p>
+<div class="mini-pills">
+<button class="skill-pill small-pill">Node.js</button>
+<button class="skill-pill small-pill">FastAPI</button>
+<button class="skill-pill small-pill">Docker</button>
+<button class="skill-pill small-pill">Serverless</button>
+</div>
+</div>
+<div class="lux-card">
+<h3>AI and Automation</h3>
+<p>Creating smart workflows, bot systems, automated tools, and AI-powered backend features.</p>
+<div class="mini-pills">
+<button class="skill-pill small-pill">LLM Integration</button>
+<button class="skill-pill small-pill">Workflow Automation</button>
+<button class="skill-pill small-pill">Autonomous Agents</button>
+</div>
 </div>
 </div>
 </section>
@@ -68,5 +103,12 @@
 <p>GitHub: github.com/MrTacoL</p>
 </div>
 </section>
+<script>
+document.querySelectorAll('.skill-pill').forEach(function(pill){
+  pill.addEventListener('click', function(){
+    pill.classList.toggle('active');
+  });
+});
+</script>
 </body>
 </html>
