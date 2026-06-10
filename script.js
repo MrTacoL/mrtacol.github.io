@@ -26,8 +26,8 @@ let lanyardReconnect = null;
 
 profileName.textContent = config.profileName || 'mrtacosi';
 discordName.textContent = config.profileName || 'mrtacosi';
-activityLine.textContent = config.fallbackActivity || 'Playing Code';
-activitySubline.textContent = config.fallbackSubline || 'Idling';
+activityLine.textContent = config.fallbackActivity || 'Loading Discord';
+activitySubline.textContent = config.fallbackSubline || 'Checking live status';
 
 function resize() {
   const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -161,6 +161,10 @@ if (volumeSlider) {
   });
 }
 
+soundToggle.addEventListener('pointerdown', (event) => {
+  event.stopPropagation();
+});
+
 soundToggle.addEventListener('click', async () => {
   if (!music.src || (!musicReady && music.error)) {
     soundIcon.textContent = '🔇';
@@ -181,7 +185,8 @@ soundToggle.addEventListener('click', async () => {
   }
 });
 
-function unlockMusicOnFirstInteraction() {
+function unlockMusicOnFirstInteraction(event) {
+  if (event?.target?.closest?.('.sound-panel')) return;
   if (autoplayBlocked || music.paused) {
     tryPlayMusic();
   }
@@ -224,8 +229,8 @@ function setActivityIcon(text = '⌨', imageUrl = '') {
 
 function setPresenceFallback(message = '') {
   statusDot.style.background = statusColors.offline;
-  activityLine.textContent = config.fallbackActivity || 'Playing Code';
-  activitySubline.textContent = message || config.fallbackSubline || 'Idling';
+  activityLine.textContent = config.fallbackActivity || 'Loading Discord';
+  activitySubline.textContent = message || config.fallbackSubline || 'Checking live status';
   setActivityIcon('⌨');
 }
 
@@ -278,8 +283,8 @@ function applyPresence(data) {
 
   const activity = bestActivity(data);
   if (!activity) {
-    activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : (config.fallbackActivity || 'Playing Code');
-    activitySubline.textContent = data.discord_status === 'offline' ? 'Not currently active' : (config.fallbackSubline || 'Idling');
+    activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : (config.fallbackActivity || 'Loading Discord');
+    activitySubline.textContent = data.discord_status === 'offline' ? 'Not currently active' : (config.fallbackSubline || 'Checking live status');
     setActivityIcon('⌨');
     return;
   }
@@ -296,13 +301,13 @@ function applyPresence(data) {
 
   if (activity.type === 4) {
     activityLine.textContent = 'Custom Status';
-    activitySubline.textContent = activity.state || config.fallbackSubline || 'Idling';
+    activitySubline.textContent = activity.state || config.fallbackSubline || 'Checking live status';
     setActivityIcon(icon, activityAssetUrl(activity));
     return;
   }
 
   activityLine.textContent = `${label} ${activity.name || 'Discord'}`;
-  activitySubline.textContent = [activity.details, activity.state].filter(Boolean).join(' • ') || config.fallbackSubline || 'Idling';
+  activitySubline.textContent = [activity.details, activity.state].filter(Boolean).join(' • ') || config.fallbackSubline || 'Checking live status';
   setActivityIcon(icon, activityAssetUrl(activity));
 }
 
@@ -321,7 +326,7 @@ async function loadDiscordPresence() {
   if (connectDiscord) connectDiscord.hidden = true;
 
   try {
-    const res = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    const res = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(id)}?t=${Date.now()}`, { cache: 'no-store' });
     const json = await res.json();
     if (!json.success) throw new Error('presence unavailable');
     applyPresence(json.data);
@@ -329,6 +334,12 @@ async function loadDiscordPresence() {
     if (connectDiscord) connectDiscord.hidden = false;
     setPresenceFallback('Discord presence unavailable');
   }
+}
+
+function sendLanyardSubscribe(id) {
+  if (lanyardSocket?.readyState !== WebSocket.OPEN) return;
+  lanyardSocket.send(JSON.stringify({ op: 2, d: { subscribe_to_id: id } }));
+  lanyardSocket.send(JSON.stringify({ op: 2, d: { subscribe_to_ids: [id] } }));
 }
 
 function startDiscordRealtime() {
@@ -352,7 +363,7 @@ function startDiscordRealtime() {
           }
         }, payload.d.heartbeat_interval);
 
-        lanyardSocket.send(JSON.stringify({ op: 2, d: { subscribe_to_id: id } }));
+        sendLanyardSubscribe(id);
         return;
       }
 
