@@ -20,6 +20,9 @@ let height = 0;
 let particles = [];
 let musicReady = false;
 let autoplayBlocked = false;
+let lanyardSocket = null;
+let lanyardHeartbeat = null;
+let lanyardReconnect = null;
 
 profileName.textContent = config.profileName || 'mrtacosi';
 discordName.textContent = config.profileName || 'mrtacosi';
@@ -134,13 +137,13 @@ function setupMusic() {
     soundToggle.classList.remove('disabled');
     soundToggle.title = 'Play music';
     tryPlayMusic();
-  }, { once: true });
+  });
 
   music.addEventListener('error', () => {
     musicReady = false;
     soundToggle.classList.add('disabled');
     soundIcon.textContent = '🔇';
-    soundToggle.title = 'Music file not found yet';
+    soundToggle.title = 'Music file not found or not playable';
   });
 
   setTimeout(tryPlayMusic, 300);
@@ -219,10 +222,10 @@ function setActivityIcon(text = '⌨', imageUrl = '') {
   activityIcon.textContent = imageUrl ? '' : text;
 }
 
-function setPresenceFallback() {
+function setPresenceFallback(message = '') {
   statusDot.style.background = statusColors.offline;
   activityLine.textContent = config.fallbackActivity || 'Playing Code';
-  activitySubline.textContent = config.fallbackSubline || 'Idling';
+  activitySubline.textContent = message || config.fallbackSubline || 'Idling';
   setActivityIcon('⌨');
 }
 
@@ -248,7 +251,7 @@ function activityAssetUrl(activity) {
 }
 
 function applyPresence(data) {
-  if (!data || !data.discord_user) return setPresenceFallback();
+  if (!data || !data.discord_user) return setPresenceFallback('Discord presence unavailable');
 
   const user = data.discord_user;
   const tag = user.global_name || user.username || config.profileName || 'mrtacosi';
@@ -261,8 +264,14 @@ function applyPresence(data) {
 
   if (user.avatar) {
     const ext = user.avatar.startsWith('a_') ? 'gif' : 'png';
+    const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256`;
     avatar.textContent = '';
-    avatar.style.backgroundImage = `url(https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256)`;
+    avatar.style.backgroundImage = `url("${avatarUrl}")`;
+    avatar.style.backgroundSize = 'cover';
+    avatar.style.backgroundPosition = 'center';
+  } else if (user.discriminator && user.discriminator !== '0') {
+    avatar.textContent = '';
+    avatar.style.backgroundImage = `url("https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator) % 5}.png")`;
     avatar.style.backgroundSize = 'cover';
     avatar.style.backgroundPosition = 'center';
   }
@@ -297,11 +306,15 @@ function applyPresence(data) {
   setActivityIcon(icon, activityAssetUrl(activity));
 }
 
+function currentDiscordId() {
+  return (config.discordUserId || localStorage.getItem('mrtacosiDiscordId') || '').trim();
+}
+
 async function loadDiscordPresence() {
-  const id = (config.discordUserId || localStorage.getItem('mrtacosiDiscordId') || '').trim();
+  const id = currentDiscordId();
   if (!id) {
     if (connectDiscord) connectDiscord.hidden = false;
-    setPresenceFallback();
+    setPresenceFallback('Missing Discord ID');
     return;
   }
 
@@ -314,7 +327,54 @@ async function loadDiscordPresence() {
     applyPresence(json.data);
   } catch {
     if (connectDiscord) connectDiscord.hidden = false;
-    setPresenceFallback();
+    setPresenceFallback('Discord presence unavailable');
+  }
+}
+
+function startDiscordRealtime() {
+  const id = currentDiscordId();
+  if (!id || !('WebSocket' in window)) return;
+
+  clearTimeout(lanyardReconnect);
+  clearInterval(lanyardHeartbeat);
+
+  try {
+    lanyardSocket = new WebSocket('wss://api.lanyard.rest/socket');
+
+    lanyardSocket.addEventListener('message', (event) => {
+      const payload = JSON.parse(event.data);
+
+      if (payload.op === 1 && payload.d?.heartbeat_interval) {
+        clearInterval(lanyardHeartbeat);
+        lanyardHeartbeat = setInterval(() => {
+          if (lanyardSocket?.readyState === WebSocket.OPEN) {
+            lanyardSocket.send(JSON.stringify({ op: 3 }));
+          }
+        }, payload.d.heartbeat_interval);
+
+        lanyardSocket.send(JSON.stringify({ op: 2, d: { subscribe_to_id: id } }));
+        return;
+      }
+
+      if (payload.t === 'INIT_STATE') {
+        applyPresence(payload.d?.[id] || payload.d);
+      }
+
+      if (payload.t === 'PRESENCE_UPDATE') {
+        applyPresence(payload.d);
+      }
+    });
+
+    lanyardSocket.addEventListener('close', () => {
+      clearInterval(lanyardHeartbeat);
+      lanyardReconnect = setTimeout(startDiscordRealtime, 5000);
+    });
+
+    lanyardSocket.addEventListener('error', () => {
+      lanyardSocket.close();
+    });
+  } catch {
+    lanyardReconnect = setTimeout(startDiscordRealtime, 5000);
   }
 }
 
@@ -325,6 +385,7 @@ if (connectDiscord) {
     if (!id) return;
     localStorage.setItem('mrtacosiDiscordId', id.trim());
     loadDiscordPresence();
+    startDiscordRealtime();
   });
 }
 
@@ -333,4 +394,5 @@ resize();
 drawRain();
 setupMusic();
 loadDiscordPresence();
-setInterval(loadDiscordPresence, 15000);
+startDiscordRealtime();
+setInterval(loadDiscordPresence, 30000);
