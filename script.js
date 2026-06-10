@@ -3,6 +3,7 @@ const canvas = document.getElementById('weatherCanvas');
 const ctx = canvas.getContext('2d');
 const soundToggle = document.getElementById('soundToggle');
 const soundIcon = document.getElementById('soundIcon');
+const volumeSlider = document.getElementById('volumeSlider');
 const music = document.getElementById('music');
 const profileName = document.getElementById('profileName');
 const discordName = document.getElementById('discordName');
@@ -71,20 +72,41 @@ function drawRain() {
   requestAnimationFrame(drawRain);
 }
 
+function sliderValue() {
+  return Math.max(0, Math.min(1, Number(volumeSlider?.value || 72) / 100));
+}
+
+function updateSliderFill() {
+  if (!volumeSlider) return;
+  const value = Number(volumeSlider.value || 0);
+  volumeSlider.style.background = `linear-gradient(90deg, #fff ${value}%, rgba(255,255,255,.3) ${value}%)`;
+}
+
+function updateSoundIcon() {
+  if (music.paused) {
+    soundIcon.textContent = '🔈';
+    return;
+  }
+
+  if (music.volume <= 0.01) soundIcon.textContent = '🔇';
+  else if (music.volume < 0.45) soundIcon.textContent = '🔉';
+  else soundIcon.textContent = '🔊';
+}
+
 async function tryPlayMusic() {
   if (!music.src || (!musicReady && music.error)) return false;
 
   try {
     music.muted = false;
-    music.volume = 0.72;
+    music.volume = sliderValue();
     await music.play();
     autoplayBlocked = false;
-    soundIcon.textContent = '🔊';
+    updateSoundIcon();
     soundToggle.title = 'Pause music';
     return true;
   } catch {
     autoplayBlocked = true;
-    soundIcon.textContent = '🔈';
+    updateSoundIcon();
     soundToggle.title = 'Click once to start music';
     return false;
   }
@@ -101,7 +123,9 @@ function setupMusic() {
   music.loop = true;
   music.autoplay = true;
   music.preload = 'auto';
+  music.volume = sliderValue();
   musicReady = true;
+  updateSliderFill();
 
   music.addEventListener('canplay', () => {
     musicReady = true;
@@ -120,6 +144,18 @@ function setupMusic() {
   setTimeout(tryPlayMusic, 300);
 }
 
+if (volumeSlider) {
+  volumeSlider.addEventListener('input', () => {
+    music.volume = sliderValue();
+    updateSliderFill();
+    updateSoundIcon();
+  });
+
+  volumeSlider.addEventListener('pointerdown', (event) => {
+    event.stopPropagation();
+  });
+}
+
 soundToggle.addEventListener('click', async () => {
   if (!music.src || (!musicReady && music.error)) {
     soundIcon.textContent = '🔇';
@@ -132,7 +168,7 @@ soundToggle.addEventListener('click', async () => {
       await tryPlayMusic();
     } else {
       music.pause();
-      soundIcon.textContent = '🔈';
+      updateSoundIcon();
       soundToggle.title = 'Play music';
     }
   } catch {
