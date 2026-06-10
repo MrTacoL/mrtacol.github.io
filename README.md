@@ -1,6 +1,6 @@
 # mrtacosi profile site
 
-Neon BMW rain profile page styled like your reference profile.
+Neon rain profile page with a visible car background and Discord presence.
 
 ## Run locally
 
@@ -19,14 +19,26 @@ npm start
 
 ## Discord presence
 
-Open `config.js` and paste your numeric Discord user ID into `discordUserId`. The page also has a small `connect discord` button for local testing in your browser.
+Your Discord ID is already set in `config.js`:
+
+```txt
+828806896089038879
+```
 
 ## Music
 
-The sound button is wired to `./assets/music.mp3`. Upload your own song file at:
+The sound button is wired to this path:
 
 ```txt
 assets/music.mp3
 ```
 
-I could not push the full MP3 binary through this GitHub connector, but the site code is already set up for it.
+Upload your song file to `assets/music.mp3` and it will play from the sound button.
+
+## Car
+
+The car is stored at:
+
+```txt
+assets/neon-car.svg
+```
