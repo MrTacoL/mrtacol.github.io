@@ -11,6 +11,8 @@ const activityLine = document.getElementById('activityLine');
 const activitySubline = document.getElementById('activitySubline');
 const avatar = document.getElementById('avatar');
 const statusDot = document.getElementById('statusDot');
+const activityIcon = document.getElementById('activityIcon');
+const discordProfileLink = document.getElementById('discordProfileLink');
 const connectDiscord = document.getElementById('connectDiscord');
 
 let width = 0;
@@ -192,14 +194,57 @@ const statusColors = {
   offline: '#747f8d'
 };
 
+const typeLabels = {
+  0: 'Playing',
+  1: 'Streaming',
+  2: 'Listening to',
+  3: 'Watching',
+  4: 'Custom Status',
+  5: 'Competing in'
+};
+
+const typeIcons = {
+  0: '⌨',
+  1: '▶',
+  2: '♫',
+  3: '◉',
+  4: '✦',
+  5: '⚑'
+};
+
+function setActivityIcon(text = '⌨', imageUrl = '') {
+  if (!activityIcon) return;
+  activityIcon.classList.toggle('has-art', Boolean(imageUrl));
+  activityIcon.style.backgroundImage = imageUrl ? `url("${imageUrl}")` : '';
+  activityIcon.textContent = imageUrl ? '' : text;
+}
+
 function setPresenceFallback() {
   statusDot.style.background = statusColors.offline;
   activityLine.textContent = config.fallbackActivity || 'Playing Code';
   activitySubline.textContent = config.fallbackSubline || 'Idling';
+  setActivityIcon('⌨');
 }
 
-function bestActivity(activities = []) {
-  return activities.find(a => a.type === 0) || activities.find(a => a.type === 4) || activities[0];
+function bestActivity(data) {
+  const activities = data.activities || [];
+  if (data.spotify) return { kind: 'spotify', ...data.spotify };
+  return activities.find(a => a.type === 0)
+    || activities.find(a => a.type === 2)
+    || activities.find(a => a.type === 1)
+    || activities.find(a => a.type === 3)
+    || activities.find(a => a.type === 5)
+    || activities.find(a => a.type === 4)
+    || activities[0];
+}
+
+function activityAssetUrl(activity) {
+  const asset = activity?.assets?.large_image || activity?.assets?.small_image;
+  if (!asset) return '';
+  if (asset.startsWith('mp:')) return `https://media.discordapp.net/${asset.slice(3)}`;
+  if (asset.startsWith('spotify:')) return `https://i.scdn.co/image/${asset.replace('spotify:', '')}`;
+  if (activity.application_id) return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${asset}.png`;
+  return '';
 }
 
 function applyPresence(data) {
@@ -210,28 +255,46 @@ function applyPresence(data) {
   discordName.textContent = tag;
   statusDot.style.background = statusColors[data.discord_status] || statusColors.offline;
 
+  if (discordProfileLink) {
+    discordProfileLink.href = `https://discord.com/users/${user.id}`;
+  }
+
   if (user.avatar) {
+    const ext = user.avatar.startsWith('a_') ? 'gif' : 'png';
     avatar.textContent = '';
-    avatar.style.backgroundImage = `url(https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128)`;
+    avatar.style.backgroundImage = `url(https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256)`;
     avatar.style.backgroundSize = 'cover';
     avatar.style.backgroundPosition = 'center';
   }
 
-  const activity = bestActivity(data.activities || []);
+  const activity = bestActivity(data);
   if (!activity) {
     activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : (config.fallbackActivity || 'Playing Code');
     activitySubline.textContent = data.discord_status === 'offline' ? 'Not currently active' : (config.fallbackSubline || 'Idling');
+    setActivityIcon('⌨');
     return;
   }
+
+  if (activity.kind === 'spotify') {
+    activityLine.textContent = 'Listening to Spotify';
+    activitySubline.textContent = `${activity.song || 'Unknown Song'}${activity.artist ? ` • ${activity.artist}` : ''}`;
+    setActivityIcon('♫', activity.album_art_url || '');
+    return;
+  }
+
+  const label = typeLabels[activity.type] || 'Using';
+  const icon = typeIcons[activity.type] || '⌨';
 
   if (activity.type === 4) {
     activityLine.textContent = 'Custom Status';
     activitySubline.textContent = activity.state || config.fallbackSubline || 'Idling';
+    setActivityIcon(icon, activityAssetUrl(activity));
     return;
   }
 
-  activityLine.textContent = `Playing ${activity.name || 'Code'}`;
-  activitySubline.textContent = activity.details || activity.state || config.fallbackSubline || 'Idling';
+  activityLine.textContent = `${label} ${activity.name || 'Discord'}`;
+  activitySubline.textContent = [activity.details, activity.state].filter(Boolean).join(' • ') || config.fallbackSubline || 'Idling';
+  setActivityIcon(icon, activityAssetUrl(activity));
 }
 
 async function loadDiscordPresence() {
