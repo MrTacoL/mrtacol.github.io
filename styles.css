@@ -48,7 +48,7 @@ body::before {
 
 .vignette {
   z-index: 1;
-  background: radial-gradient(circle at center, transparent 28%, rgba(0, 0, 0, .58) 100%);
+  background: radial-gradient(circle at center, transparent 25%, rgba(0, 0, 0, .64) 100%);
 }
 
 .grain {
@@ -68,15 +68,17 @@ body::before {
 
 .car {
   position: fixed;
-  left: 50%;
-  top: 54%;
-  width: min(76rem, 92vw);
-  max-height: 76vh;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
   z-index: 0;
   pointer-events: none;
-  opacity: .96;
-  filter: drop-shadow(0 2.2rem 3.8rem rgba(0, 0, 0, .9));
+  opacity: .92;
+  filter: brightness(.8) saturate(1.15) contrast(1.08);
 }
 
 #weatherCanvas {
@@ -261,5 +263,4 @@ body::before {
   .activity-card { grid-template-columns: 3.8rem 1fr 3.8rem; }
   .sound-toggle { top: .9rem; left: .9rem; width: 3.25rem; height: 3.25rem; }
   .name { font-size: 2.2rem; }
-  .car { width: 130vw; top: 56%; }
 }
