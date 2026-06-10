@@ -16,9 +16,12 @@
   </video>
   <canvas id="weatherCanvas" aria-hidden="true"></canvas>
 
-  <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
-    <span id="soundIcon">🔈</span>
-  </button>
+  <div class="sound-panel" aria-label="Music volume control">
+    <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound" type="button">
+      <span id="soundIcon">🔈</span>
+    </button>
+    <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" />
+  </div>
 
   <main class="stage">
     <section class="profile" aria-label="Profile card">
