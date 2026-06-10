@@ -1,6 +1,6 @@
 # mrtacosi profile site
 
-Neon BMW rain profile page styled like the screenshot.
+Neon BMW rain profile page styled like your reference profile.
 
 ## Run locally
 
@@ -17,8 +17,16 @@ Deploy this GitHub repo on Railway as a Node app. Railway should use:
 npm start
 ```
 
-The site is also static-friendly because the main files are in the repo root.
+## Discord presence
 
-## Audio note
+Open `config.js` and paste your numeric Discord user ID into `discordUserId`. The page also has a small `connect discord` button for local testing in your browser.
 
-The sound button is ready, but no full song is committed. Add a legally usable music file yourself and wire it into the audio tag if you want music.
+## Music
+
+The sound button is wired to `./assets/music.mp3`. Upload your own song file at:
+
+```txt
+assets/music.mp3
+```
+
+I could not push the full MP3 binary through this GitHub connector, but the site code is already set up for it.
