@@ -88,29 +88,73 @@ body::before {
   pointer-events: none;
 }
 
-.sound-toggle {
+.sound-panel {
   position: fixed;
   top: 1.35rem;
   left: 1.35rem;
   z-index: 10;
-  width: 3.75rem;
-  height: 3.75rem;
+  width: 13.35rem;
+  height: 4.15rem;
+  padding: .65rem .85rem;
   border: 1px solid rgba(255, 255, 255, .16);
   border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: rgba(255, 255, 255, .13);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .15);
+  backdrop-filter: blur(16px);
+}
+
+.sound-toggle {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 0;
+  border-radius: .8rem;
   display: grid;
   place-items: center;
   color: #fff;
   font-size: 1.45rem;
-  background: rgba(255, 255, 255, .13);
-  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .15);
-  backdrop-filter: blur(16px);
+  background: transparent;
   cursor: pointer;
   transition: .18s ease;
+  flex: 0 0 auto;
 }
 
 .sound-toggle:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, .18);
+  transform: translateY(-1px) scale(1.03);
+  background: rgba(255, 255, 255, .1);
+}
+
+.volume-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 8.55rem;
+  height: .45rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fff 72%, rgba(255, 255, 255, .3) 72%);
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  box-shadow: 0 .3rem .9rem rgba(0, 0, 0, .35);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  box-shadow: 0 .3rem .9rem rgba(0, 0, 0, .35);
 }
 
 .stage {
@@ -261,6 +305,8 @@ body::before {
 @media (max-width: 650px) {
   .profile { transform: translateY(1.4rem); }
   .activity-card { grid-template-columns: 3.8rem 1fr 3.8rem; }
-  .sound-toggle { top: .9rem; left: .9rem; width: 3.25rem; height: 3.25rem; }
+  .sound-panel { top: .9rem; left: .9rem; width: 11.8rem; height: 3.65rem; padding: .55rem .7rem; }
+  .sound-toggle { width: 2.1rem; height: 2.1rem; }
+  .volume-slider { width: 7.4rem; }
   .name { font-size: 2.2rem; }
 }
