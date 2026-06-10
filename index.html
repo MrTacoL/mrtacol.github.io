@@ -1,129 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MrTaco Portfolio</title>
-<link rel="stylesheet" href="style.css?v=13">
-<link rel="stylesheet" href="luxury.css?v=3">
-<link rel="stylesheet" href="red-theme.css?v=13">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mrtacosi</title>
+  <meta name="description" content="mrtacosi profile page" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-<header>
-<div class="logo">MrTaco</div>
-<nav>
-<a href="#work">Work</a>
-<a href="#skills">Skills</a>
-<a href="#services">Services</a>
-<a href="#contact">Contact</a>
-</nav>
-</header>
-<section class="hero">
-<div class="overlay"></div>
-<div class="content">
-<p class="small">Minecraft Bedrock Studio</p>
-<h1>Custom Bedrock Add-ons, PvP Systems, GUIs and Server Experiences</h1>
-<p>I build modern Minecraft Bedrock projects including SkyGen systems, custom GUIs, bosses, scoreboards, economy systems, and backend scripting.</p>
-<div class="buttons">
-<a class="primary" href="#work">View My Work</a>
-<a class="secondary" href="#contact">Contact Me</a>
-</div>
-</div>
-</section>
-<section id="work" class="featured-showcase">
-<h2>Featured Work</h2>
-<div class="showcase-grid">
-<div class="project-card kit-card">
-<div class="project-visual">
-<div class="project-icon">⚔</div>
-<div class="project-copy">
-<span>COMBAT SYSTEM</span>
-<h3>KitPvP</h3>
-<p>Fast PvP systems with CPS tracking, leaderboards, crates, ranks, cooldowns, and smooth combat logic.</p>
-<div class="project-tags"><em>PVP</em><em>CPS</em><em>RANKS</em></div>
-</div>
-</div>
-<div class="project-body"><h3>KitPvP Systems</h3><p>Combat systems, CPS counters, leaderboards, crates, ranks, and custom PvP mechanics.</p></div>
-</div>
-<div class="project-card sky-card">
-<div class="project-visual">
-<div class="project-icon">◆</div>
-<div class="project-copy">
-<span>SKYGEN CORE</span>
-<h3>SkyGen</h3>
-<p>Generator gameplay with saved plots, upgrades, economy support, automation, and backend persistence.</p>
-<div class="project-tags"><em>GENS</em><em>PLOTS</em><em>ECONOMY</em></div>
-</div>
-</div>
-<div class="project-body"><h3>SkyGen Systems</h3><p>Generators, plot saving, economy upgrades, and fully automated backend systems.</p></div>
-</div>
-<div class="project-card boss-card-new">
-<div class="project-visual boss-visual gif-boss">
-<img src="assets/reaper.gif?v=13" alt="Animated Larix Reaper boss render">
-</div>
-<div class="project-body"><h3>Boss Fights</h3><p>Cinematic Bedrock bosses with custom models, textures, attack systems, animations, and scripted combat mechanics.</p></div>
-</div>
-</div>
-</section>
-<section id="skills" class="luxury-skills">
-<h2>Core Foundations</h2>
-<div class="pill-wrap">
-<button class="skill-pill">C Programming</button>
-<button class="skill-pill">Python</button>
-<button class="skill-pill">Java</button>
-<button class="skill-pill">JavaScript</button>
-<button class="skill-pill">TypeScript</button>
-<button class="skill-pill">HTML5 / CSS3</button>
-<button class="skill-pill">Character Design</button>
-<button class="skill-pill">UI / UX Design</button>
-</div>
-<div class="lux-grid">
-<div class="lux-card">
-<h3>Backend and Cloud</h3>
-<p>Building secure server systems, APIs, dashboards, automation, and server-side tools.</p>
-<div class="mini-pills">
-<button class="skill-pill small-pill">Node.js</button>
-<button class="skill-pill small-pill">FastAPI</button>
-<button class="skill-pill small-pill">Docker</button>
-<button class="skill-pill small-pill">Serverless</button>
-</div>
-</div>
-<div class="lux-card">
-<h3>AI and Automation</h3>
-<p>Creating smart workflows, bot systems, automated tools, and AI-powered backend features.</p>
-<div class="mini-pills">
-<button class="skill-pill small-pill">LLM Integration</button>
-<button class="skill-pill small-pill">Workflow Automation</button>
-<button class="skill-pill small-pill">Autonomous Agents</button>
-</div>
-</div>
-</div>
-</section>
-<section id="services">
-<h2>Services</h2>
-<div class="service-grid">
-<div>Custom Add-ons</div>
-<div>JSON UI</div>
-<div>Boss Fights</div>
-<div>Economy Systems</div>
-<div>Custom Weapons</div>
-<div>Backend Scripting</div>
-</div>
-</section>
-<section id="contact">
-<h2>Contact</h2>
-<div class="contact-card">
-<p>Discord:mrtacosi</p>
-<p>Email: mrtacomm@gmail.com</p>
-<p>GitHub: github.com/MrTacoL</p>
-</div>
-</section>
-<script>
-document.querySelectorAll('.skill-pill').forEach(function(pill){
-  pill.addEventListener('click', function(){
-    pill.classList.toggle('active');
-  });
-});
-</script>
+  <div class="background-fallback"></div>
+  <div class="grain"></div>
+  <canvas id="weatherCanvas" aria-hidden="true"></canvas>
+
+  <button class="sound-toggle" id="soundToggle" aria-label="Toggle music">
+    <span id="soundIcon">🔈</span>
+  </button>
+
+  <main class="stage">
+    <section class="profile" aria-label="Profile card">
+      <h1 class="name">mrtacosi</h1>
+
+      <div class="activity-card">
+        <div class="avatar-fallback" aria-hidden="true">Z</div>
+        <div class="status-dot" aria-hidden="true"></div>
+
+        <div class="activity-text">
+          <strong>mrtacosi</strong>
+          <span>Playing Code</span>
+          <small>Idling</small>
+        </div>
+
+        <div class="device-icon" aria-hidden="true">⌨</div>
+      </div>
+
+      <nav class="socials" aria-label="Social links">
+        <a href="https://github.com/MrTacoL" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
+        <a href="https://steamcommunity.com/" target="_blank" rel="noreferrer" aria-label="Steam">ST</a>
+      </nav>
+
+      <div class="views" aria-label="Views">◉ <span>1</span></div>
+    </section>
+  </main>
+
+  <audio id="music" preload="none" loop></audio>
+  <script src="./script.js"></script>
 </body>
 </html>
