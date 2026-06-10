@@ -20,6 +20,7 @@ let height = 0;
 let particles = [];
 let musicReady = false;
 let autoplayBlocked = false;
+let musicUnlocked = false;
 let lanyardSocket = null;
 let lanyardHeartbeat = null;
 let lanyardReconnect = null;
@@ -98,14 +99,22 @@ function updateSoundIcon() {
   else soundIcon.textContent = '🔊';
 }
 
+function removeUnlockListeners() {
+  document.removeEventListener('pointerdown', unlockMusicOnFirstInteraction);
+  document.removeEventListener('keydown', unlockMusicOnFirstInteraction);
+}
+
 async function tryPlayMusic() {
-  if (!music.src || (!musicReady && music.error)) return false;
+  if (!music.src) return false;
 
   try {
     music.muted = false;
     music.volume = sliderValue();
     await music.play();
+    musicReady = true;
+    musicUnlocked = true;
     autoplayBlocked = false;
+    removeUnlockListeners();
     updateSoundIcon();
     soundToggle.title = 'Pause music';
     return true;
@@ -124,20 +133,30 @@ function setupMusic() {
     return;
   }
 
-  music.src = config.musicSrc;
+  const musicUrl = new URL(config.musicSrc, window.location.href);
+  music.src = musicUrl.href;
   music.loop = true;
-  music.autoplay = true;
+  music.autoplay = false;
   music.preload = 'auto';
   music.volume = sliderValue();
-  musicReady = true;
+  music.muted = false;
   updateSliderFill();
+  music.load();
+
+  music.addEventListener('loadedmetadata', () => {
+    musicReady = true;
+    soundToggle.classList.remove('disabled');
+    soundToggle.title = 'Play music';
+  });
 
   music.addEventListener('canplay', () => {
     musicReady = true;
     soundToggle.classList.remove('disabled');
     soundToggle.title = 'Play music';
-    tryPlayMusic();
   });
+
+  music.addEventListener('playing', updateSoundIcon);
+  music.addEventListener('pause', updateSoundIcon);
 
   music.addEventListener('error', () => {
     musicReady = false;
@@ -155,10 +174,6 @@ if (volumeSlider) {
     updateSliderFill();
     updateSoundIcon();
   });
-
-  volumeSlider.addEventListener('pointerdown', (event) => {
-    event.stopPropagation();
-  });
 }
 
 soundToggle.addEventListener('pointerdown', (event) => {
@@ -166,7 +181,7 @@ soundToggle.addEventListener('pointerdown', (event) => {
 });
 
 soundToggle.addEventListener('click', async () => {
-  if (!music.src || (!musicReady && music.error)) {
+  if (!music.src || music.error) {
     soundIcon.textContent = '🔇';
     setTimeout(() => (soundIcon.textContent = '🔈'), 650);
     return;
@@ -186,14 +201,15 @@ soundToggle.addEventListener('click', async () => {
 });
 
 function unlockMusicOnFirstInteraction(event) {
-  if (event?.target?.closest?.('.sound-panel')) return;
+  if (musicUnlocked) return;
+  if (event?.target?.closest?.('#soundToggle')) return;
   if (autoplayBlocked || music.paused) {
     tryPlayMusic();
   }
 }
 
-document.addEventListener('pointerdown', unlockMusicOnFirstInteraction, { once: true });
-document.addEventListener('keydown', unlockMusicOnFirstInteraction, { once: true });
+document.addEventListener('pointerdown', unlockMusicOnFirstInteraction);
+document.addEventListener('keydown', unlockMusicOnFirstInteraction);
 
 const statusColors = {
   online: '#23d160',
