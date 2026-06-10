@@ -16,6 +16,7 @@ let width = 0;
 let height = 0;
 let particles = [];
 let musicReady = false;
+let autoplayBlocked = false;
 
 profileName.textContent = config.profileName || 'mrtacosi';
 discordName.textContent = config.profileName || 'mrtacosi';
@@ -70,25 +71,53 @@ function drawRain() {
   requestAnimationFrame(drawRain);
 }
 
+async function tryPlayMusic() {
+  if (!music.src || (!musicReady && music.error)) return false;
+
+  try {
+    music.muted = false;
+    music.volume = 0.72;
+    await music.play();
+    autoplayBlocked = false;
+    soundIcon.textContent = '🔊';
+    soundToggle.title = 'Pause music';
+    return true;
+  } catch {
+    autoplayBlocked = true;
+    soundIcon.textContent = '🔈';
+    soundToggle.title = 'Click once to start music';
+    return false;
+  }
+}
+
 function setupMusic() {
   if (!config.musicSrc) {
     soundToggle.classList.add('disabled');
-    soundToggle.title = 'Upload assets/music.mp3 to enable music';
+    soundToggle.title = 'Upload your music file to enable music';
     return;
   }
 
   music.src = config.musicSrc;
-  music.addEventListener('canplaythrough', () => {
+  music.loop = true;
+  music.autoplay = true;
+  music.preload = 'auto';
+  musicReady = true;
+
+  music.addEventListener('canplay', () => {
     musicReady = true;
     soundToggle.classList.remove('disabled');
     soundToggle.title = 'Play music';
+    tryPlayMusic();
   }, { once: true });
 
   music.addEventListener('error', () => {
     musicReady = false;
     soundToggle.classList.add('disabled');
-    soundToggle.title = 'Music file not found yet. Upload assets/music.mp3';
+    soundIcon.textContent = '🔇';
+    soundToggle.title = 'Music file not found yet';
   });
+
+  setTimeout(tryPlayMusic, 300);
 }
 
 soundToggle.addEventListener('click', async () => {
@@ -100,16 +129,25 @@ soundToggle.addEventListener('click', async () => {
 
   try {
     if (music.paused) {
-      await music.play();
-      soundIcon.textContent = '🔊';
+      await tryPlayMusic();
     } else {
       music.pause();
       soundIcon.textContent = '🔈';
+      soundToggle.title = 'Play music';
     }
   } catch {
     soundIcon.textContent = '🔇';
   }
 });
+
+function unlockMusicOnFirstInteraction() {
+  if (autoplayBlocked || music.paused) {
+    tryPlayMusic();
+  }
+}
+
+document.addEventListener('pointerdown', unlockMusicOnFirstInteraction, { once: true });
+document.addEventListener('keydown', unlockMusicOnFirstInteraction, { once: true });
 
 const statusColors = {
   online: '#23d160',
@@ -163,12 +201,12 @@ function applyPresence(data) {
 async function loadDiscordPresence() {
   const id = (config.discordUserId || localStorage.getItem('mrtacosiDiscordId') || '').trim();
   if (!id) {
-    connectDiscord.hidden = false;
+    if (connectDiscord) connectDiscord.hidden = false;
     setPresenceFallback();
     return;
   }
 
-  connectDiscord.hidden = true;
+  if (connectDiscord) connectDiscord.hidden = true;
 
   try {
     const res = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(id)}`, { cache: 'no-store' });
@@ -176,18 +214,20 @@ async function loadDiscordPresence() {
     if (!json.success) throw new Error('presence unavailable');
     applyPresence(json.data);
   } catch {
-    connectDiscord.hidden = false;
+    if (connectDiscord) connectDiscord.hidden = false;
     setPresenceFallback();
   }
 }
 
-connectDiscord.addEventListener('click', () => {
-  const current = localStorage.getItem('mrtacosiDiscordId') || config.discordUserId || '';
-  const id = prompt('Paste your numeric Discord user ID:', current);
-  if (!id) return;
-  localStorage.setItem('mrtacosiDiscordId', id.trim());
-  loadDiscordPresence();
-});
+if (connectDiscord) {
+  connectDiscord.addEventListener('click', () => {
+    const current = localStorage.getItem('mrtacosiDiscordId') || config.discordUserId || '';
+    const id = prompt('Paste your numeric Discord user ID:', current);
+    if (!id) return;
+    localStorage.setItem('mrtacosiDiscordId', id.trim());
+    loadDiscordPresence();
+  });
+}
 
 window.addEventListener('resize', resize);
 resize();
