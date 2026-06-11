@@ -9,17 +9,7 @@
   <link rel="stylesheet" href="./styles.css?v=profile-update-2" />
   <link rel="stylesheet" href="./music-hover.css?v=6" />
   <style>
-    .name{
-      position:relative;
-      isolation:isolate;
-      background:linear-gradient(90deg,#fff,#65efff,#ff0b72,#fff);
-      background-size:260% 100%;
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      animation:nameFlow 4s linear infinite,nameFloat 3s ease-in-out infinite;
-      filter:drop-shadow(0 0 .7rem rgba(101,239,255,.38)) drop-shadow(0 0 1.1rem rgba(255,11,114,.22));
-    }
+    .name{position:relative;isolation:isolate;background:linear-gradient(90deg,#fff,#65efff,#ff0b72,#fff);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:nameFlow 4s linear infinite,nameFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 .7rem rgba(101,239,255,.38)) drop-shadow(0 0 1.1rem rgba(255,11,114,.22));}
     .name::before,.name::after{content:attr(data-text);position:absolute;inset:0;z-index:-1;opacity:0;color:#fff;pointer-events:none;}
     .name::before{ text-shadow:.08rem 0 #65efff; animation:nameGlitch 2.7s infinite; }
     .name::after{ text-shadow:-.08rem 0 #ff0b72; animation:nameGlitch 3.1s infinite reverse; }
@@ -41,6 +31,7 @@
   <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" preload="auto" loop></audio>
   <script src="./config.js?v=profile-update-1"></script>
   <script src="./script.js?v=activity-icons-3"></script>
+  <script src="./view-counter-live.js?v=1"></script>
   <script src="./music-hover.js?v=draw-mode-2"></script>
   <script src="./site-widgets.js?v=mobile-dropdown-2"></script>
   <script src="./draw-focus.js?v=1"></script>
