@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mrtacosi</title>
   <meta name="description" content="mrtacosi profile page" />
-  <link rel="preload" as="audio" href="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-5" type="audio/mpeg" />
-  <link rel="stylesheet" href="./styles.css?v=stable-loader-1" />
+  <link rel="preload" as="audio" href="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" type="audio/mpeg" />
+  <link rel="stylesheet" href="./styles.css?v=profile-update-1" />
 </head>
 <body>
   <div class="background"></div>
@@ -17,22 +17,36 @@
   </video>
   <canvas id="weatherCanvas" aria-hidden="true"></canvas>
 
+  <section class="enter-screen" id="enterScreen" aria-label="Enter site">
+    <button class="enter-card" id="enterButton" type="button">
+      <span class="enter-title">mrtacosi</span>
+      <span class="enter-subtitle">click to enter</span>
+      <span class="enter-note">music starts after one click</span>
+    </button>
+  </section>
+
   <div class="sound-panel" aria-label="Music volume control">
     <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound" type="button">
       <span id="soundIcon" class="icon-wrap">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.04v8.08A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.5v2.08A7.5 7.5 0 0 1 18.5 12 7.5 7.5 0 0 1 14 18.42v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.5Z"/></svg>
       </span>
     </button>
-    <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" />
+    <div class="sound-stack">
+      <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" />
+      <span class="music-title" id="musicTitle">♪ PLAZA - Personal</span>
+    </div>
   </div>
 
   <main class="stage">
     <section class="profile" aria-label="Profile card">
       <h1 class="name" id="profileName">mrtacosi</h1>
+      <p class="about-line">Developer • Minecraft Bedrock Creator • Larix Network</p>
 
-      <a class="activity-card" id="discordProfileLink" href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" aria-label="Open Discord profile">
-        <div class="avatar-fallback" id="avatar" aria-hidden="true">Z</div>
-        <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+      <div class="activity-card" id="activityCard" aria-label="Discord profile card">
+        <a class="avatar-link" id="discordProfileLink" href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" aria-label="Open Discord profile">
+          <div class="avatar-fallback" id="avatar" aria-hidden="true">Z</div>
+          <div class="status-dot" id="statusDot" aria-hidden="true"></div>
+        </a>
 
         <div class="activity-text">
           <strong><span id="discordName">mrtacosi</span><span class="discord-badge" aria-label="Discord linked">◆</span></strong>
@@ -40,45 +54,46 @@
           <small id="activitySubline">Checking live status</small>
         </div>
 
+        <button class="copy-discord" id="copyDiscord" type="button" aria-label="Copy Discord username">Copy</button>
+
         <div class="device-icon" id="activityIcon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-8ZM6.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11ZM7 8h2v2H7V8Zm3 0h2v2h-2V8Zm3 0h2v2h-2V8Zm3 0h1v2h-1V8ZM7 11h1v2H7v-2Zm2 0h2v2H9v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-7 3h8v1H8v-1Z"/></svg>
         </div>
-      </a>
+      </div>
 
       <nav class="socials" aria-label="Social links">
-        <a href="https://github.com/MrTacoL" target="_blank" rel="noreferrer" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.36 22.9c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.38-3.88-1.38-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.73-1.56-2.56-.3-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.08-.12-.3-.52-1.5.11-3.04 0 0 .98-.31 3.18 1.18A10.9 10.9 0 0 1 12 6.15c.98 0 1.96.13 2.88.39 2.2-1.49 3.17-1.18 3.17-1.18.64 1.55.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.41-2.7 5.38-5.27 5.67.42.36.78 1.06.78 2.15v3.04c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
-        </a>
-        <a href="https://steamcommunity.com/" target="_blank" rel="noreferrer" aria-label="Steam">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a11 11 0 0 0-10.9 9.62l5.92 2.45a3.1 3.1 0 0 1 1.72-.52h.17l2.63-3.8v-.06a4.1 4.1 0 1 1 4.1 4.1h-.1l-3.73 2.66v.15a3.1 3.1 0 0 1-6.15.5l-4.23-1.75A11 11 0 1 0 12 1ZM8.75 14.1a1.55 1.55 0 0 0-.75.2l1.06.44a1.16 1.16 0 0 1 .62 1.52 1.16 1.16 0 0 1-1.52.63l-1-.42a1.56 1.56 0 1 0 1.59-2.37Zm6.9-8.07a2.65 2.65 0 1 0 0 5.3 2.65 2.65 0 0 0 0-5.3Zm0 .65a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/></svg>
-        </a>
+        <a href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" aria-label="Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 5.2A16 16 0 0 0 15.6 4l-.2.4c1.4.4 2 .9 2.6 1.3a12.6 12.6 0 0 0-12 0c.6-.5 1.4-1 2.7-1.3L8.4 4a16 16 0 0 0-3.9 1.2C2 9 1.3 12.6 1.6 16.1A15.7 15.7 0 0 0 6.4 18.5l1-1.6c-.6-.2-1.2-.5-1.7-.8l.4-.3a11.8 11.8 0 0 0 11.8 0l.4.3c-.5.3-1.1.6-1.7.8l1 1.6a15.7 15.7 0 0 0 4.8-2.4c.4-4.1-.7-7.7-2.9-10.9ZM8.5 14.2c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm7 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/></svg></a>
+        <a href="https://youtube.com/@mrtacosi" target="_blank" rel="noreferrer" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4.1-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.8v1.7c0 1.8.2 3.6.2 3.6s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.7.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.6v-1.7c0-1.8-.2-3.6-.2-3.6ZM10.1 14.7V8.5l5.9 3.1-5.9 3.1Z"/></svg></a>
+        <a href="https://www.tiktok.com/@mrtacosi" target="_blank" rel="noreferrer" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 3c.4 3 2.1 4.8 5 5v3.2a8.1 8.1 0 0 1-5-1.7v6.5A5.1 5.1 0 1 1 10.4 11c.4 0 .7 0 1.1.1v3.4a2 2 0 1 0 1.3 1.9V3h2.7Z"/></svg></a>
+        <a href="https://www.roblox.com/" target="_blank" rel="noreferrer" aria-label="Roblox" title="Roblox"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 22 6l-4 16L2 18 6 2Zm5.2 7.2-1.1 4.6 4.7 1.1 1.1-4.6-4.7-1.1Z"/></svg></a>
+        <a href="https://www.minecraft.net/" target="_blank" rel="noreferrer" aria-label="Minecraft" title="Minecraft"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5 12 3l8 3.5v10L12 21l-8-4.5v-10Zm8 5.25 5.9-2.6L12 6.6 6.1 9.15 12 11.75Zm-6 5.1 5 2.8v-6.15l-5-2.25v5.6Zm7 2.8 5-2.8v-5.6l-5 2.25v6.15Z"/></svg></a>
+        <a href="https://github.com/MrTacoL" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 8.36 22.9c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.38-3.88-1.38-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.72 1.27 3.38.97.1-.75.4-1.27.73-1.56-2.56-.3-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.08-.12-.3-.52-1.5.11-3.04 0 0 .98-.31 3.18 1.18A10.9 10.9 0 0 1 12 6.15c.98 0 1.96.13 2.88.39 2.2-1.49 3.17-1.18 3.17-1.18.64 1.55.24 2.75.12 3.04.74.8 1.18 1.82 1.18 3.08 0 4.41-2.7 5.38-5.27 5.67.42.36.78 1.06.78 2.15v3.04c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+        <a href="https://steamcommunity.com/" target="_blank" rel="noreferrer" aria-label="Steam" title="Steam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a11 11 0 0 0-10.9 9.62l5.92 2.45a3.1 3.1 0 0 1 1.72-.52h.17l2.63-3.8v-.06a4.1 4.1 0 1 1 4.1 4.1h-.1l-3.73 2.66v.15a3.1 3.1 0 0 1-6.15.5l-4.23-1.75A11 11 0 1 0 12 1ZM8.75 14.1a1.55 1.55 0 0 0-.75.2l1.06.44a1.16 1.16 0 0 1 .62 1.52 1.16 1.16 0 0 1-1.52.63l-1-.42a1.56 1.56 0 1 0 1.59-2.37Zm6.9-8.07a2.65 2.65 0 1 0 0 5.3 2.65 2.65 0 0 0 0-5.3Zm0 .65a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z"/></svg></a>
       </nav>
 
-      <div class="views" aria-label="Live views">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.2 0 8.7 4.2 9.8 5.8a2 2 0 0 1 0 2.4C20.7 14.8 17.2 19 12 19s-8.7-4.2-9.8-5.8a2 2 0 0 1 0-2.4C3.3 9.2 6.8 5 12 5Zm0 2C7.7 7 4.7 10.5 3.9 12c.8 1.5 3.8 5 8.1 5s7.3-3.5 8.1-5c-.8-1.5-3.8-5-8.1-5Zm0 2.2A2.8 2.8 0 1 1 12 14.8a2.8 2.8 0 0 1 0-5.6Z"/></svg>
-        <span id="viewCount">10,472,918</span>
+      <div class="action-row">
+        <button class="project-button" id="projectsButton" type="button">Projects</button>
+        <div class="views" aria-label="Live views"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.2 0 8.7 4.2 9.8 5.8a2 2 0 0 1 0 2.4C20.7 14.8 17.2 19 12 19s-8.7-4.2-9.8-5.8a2 2 0 0 1 0-2.4C3.3 9.2 6.8 5 12 5Zm0 2C7.7 7 4.7 10.5 3.9 12c.8 1.5 3.8 5 8.1 5s7.3-3.5 8.1-5c-.8-1.5-3.8-5-8.1-5Zm0 2.2A2.8 2.8 0 1 1 12 14.8a2.8 2.8 0 0 1 0-5.6Z"/></svg><span id="viewCount">0</span></div>
       </div>
     </section>
   </main>
 
-  <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-5" preload="auto" loop></audio>
-  <script src="./config.js?v=stable-loader-2"></script>
-  <script src="./script.js?v=stable-loader-2"></script>
-  <script>
-    (() => {
-      const el = document.getElementById('viewCount');
-      if (!el) return;
-      const base = 10472918;
-      const seen = 'mrtacosi:view-seen-10472918-v1';
-      const key = 'mrtacosi:view-extra-10472918-v1';
-      let extra = Number(localStorage.getItem(key) || '0');
-      if (sessionStorage.getItem(seen) !== '1') {
-        extra += 1;
-        sessionStorage.setItem(seen, '1');
-        localStorage.setItem(key, String(extra));
-      }
-      el.textContent = new Intl.NumberFormat('en-US').format(base + Math.max(0, extra - 1));
-    })();
-  </script>
+  <section class="projects-modal" id="projectsModal" hidden aria-label="Projects popup">
+    <div class="projects-backdrop" data-close-projects></div>
+    <div class="projects-panel">
+      <button class="projects-close" data-close-projects type="button">×</button>
+      <h2>Projects</h2>
+      <div class="project-grid">
+        <article><strong>Larix Network</strong><span>KitPvP systems, vaults, gens, crates, UI.</span></article>
+        <article><strong>Minecraft Addons</strong><span>Bedrock scripts, custom items, mobs, menus.</span></article>
+        <article><strong>Websites</strong><span>Profile pages, landing pages, live Discord cards.</span></article>
+        <article><strong>Resource Packs</strong><span>Icons, GUI textures, models, animations.</span></article>
+      </div>
+    </div>
+  </section>
+
+  <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" preload="auto" loop></audio>
+  <script src="./config.js?v=profile-update-1"></script>
+  <script src="./script.js?v=profile-update-1"></script>
 </body>
 </html>
