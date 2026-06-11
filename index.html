@@ -56,7 +56,7 @@
 
       <div class="views" aria-label="Live views">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.2 0 8.7 4.2 9.8 5.8a2 2 0 0 1 0 2.4C20.7 14.8 17.2 19 12 19s-8.7-4.2-9.8-5.8a2 2 0 0 1 0-2.4C3.3 9.2 6.8 5 12 5Zm0 2C7.7 7 4.7 10.5 3.9 12c.8 1.5 3.8 5 8.1 5s7.3-3.5 8.1-5c-.8-1.5-3.8-5-8.1-5Zm0 2.2A2.8 2.8 0 1 1 12 14.8a2.8 2.8 0 0 1 0-5.6Z"/></svg>
-        <span id="viewCount">100,212</span>
+        <span id="viewCount">10,472,918</span>
       </div>
     </section>
   </main>
@@ -68,9 +68,9 @@
     (() => {
       const el = document.getElementById('viewCount');
       if (!el) return;
-      const base = 100212;
-      const seen = 'mrtacosi:view-seen-100212-v3';
-      const key = 'mrtacosi:view-extra-100212-v3';
+      const base = 10472918;
+      const seen = 'mrtacosi:view-seen-10472918-v1';
+      const key = 'mrtacosi:view-extra-10472918-v1';
       let extra = Number(localStorage.getItem(key) || '0');
       if (sessionStorage.getItem(seen) !== '1') {
         extra += 1;
