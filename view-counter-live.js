@@ -1,17 +1,20 @@
 (() => {
   const ENDPOINT = 'https://mrtacosi-view-counter.lonyo423.workers.dev/';
   const START_VALUE = 10472918;
-  const SESSION_KEY = 'mrtacosi:global-view-counted-v2';
+  const SESSION_KEY = 'mrtacosi:global-view-counted-v3';
   const viewCount = document.getElementById('viewCount');
+  const enterScreen = document.getElementById('enterScreen');
+  const music = document.getElementById('music');
   if (!viewCount) return;
 
-  let currentValue = START_VALUE;
+  let currentValue = 0;
   let lastGoodValue = START_VALUE;
   let initialized = false;
+  let running = false;
   let internalWrite = false;
 
-  function format(value) {
-    return new Intl.NumberFormat('en-US').format(Math.max(START_VALUE, Math.floor(Number(value) || START_VALUE)));
+  function comma(value) {
+    return new Intl.NumberFormat('en-US').format(Math.max(0, Math.floor(Number(value) || 0)));
   }
 
   function readShownValue() {
@@ -24,24 +27,24 @@
     return raw < START_VALUE ? START_VALUE + raw : raw;
   }
 
-  function setCount(value) {
-    const fixed = Math.max(START_VALUE, Number(value) || START_VALUE, lastGoodValue || START_VALUE);
-    currentValue = fixed;
-    lastGoodValue = fixed;
+  function write(value, allowSmall = false) {
+    const fixed = allowSmall ? Math.max(0, Number(value) || 0) : Math.max(START_VALUE, Number(value) || START_VALUE, lastGoodValue || START_VALUE);
     internalWrite = true;
-    viewCount.textContent = format(fixed);
+    viewCount.textContent = comma(fixed);
     internalWrite = false;
+    currentValue = fixed;
+    if (fixed >= START_VALUE) lastGoodValue = fixed;
   }
 
   new MutationObserver(() => {
     if (internalWrite) return;
     const shown = readShownValue();
-    if (shown > 0 && shown < START_VALUE) setCount(lastGoodValue || START_VALUE);
+    if (shown > 0 && shown < START_VALUE && initialized) write(lastGoodValue || START_VALUE);
   }).observe(viewCount, { childList: true, characterData: true, subtree: true });
 
-  function animateTo(nextValue, duration = 900) {
+  function animateTo(nextValue, duration = 1600, fromZero = false) {
     const target = Math.max(START_VALUE, Number(nextValue) || START_VALUE, lastGoodValue || START_VALUE);
-    const from = Math.max(START_VALUE, currentValue || START_VALUE, readShownValue() || START_VALUE);
+    const from = fromZero ? 0 : Math.max(START_VALUE, currentValue || START_VALUE, readShownValue() || START_VALUE);
     const start = performance.now();
 
     function tick(now) {
@@ -49,12 +52,9 @@
       const eased = progress < 0.5
         ? 4 * progress * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-      const next = from + (target - from) * eased;
-      internalWrite = true;
-      viewCount.textContent = format(next);
-      internalWrite = false;
+      write(from + (target - from) * eased, fromZero);
       if (progress < 1) requestAnimationFrame(tick);
-      else setCount(target);
+      else write(target);
     }
 
     requestAnimationFrame(tick);
@@ -66,29 +66,59 @@
     return normalizeWorkerValue(data.views);
   }
 
-  async function initViews() {
+  async function initViews(options = {}) {
+    if (running) return;
+    running = true;
     try {
       const alreadyCounted = sessionStorage.getItem(SESSION_KEY) === '1';
       const next = await getViews(alreadyCounted ? 'peek' : 'hit');
       if (!alreadyCounted) sessionStorage.setItem(SESSION_KEY, '1');
       initialized = true;
-      animateTo(next, 900);
+      animateTo(next, options.fromZero ? 2200 : 900, Boolean(options.fromZero));
     } catch {
-      if (!initialized) setCount(START_VALUE);
+      if (!initialized) write(START_VALUE);
+    } finally {
+      setTimeout(() => { running = false; }, 1200);
     }
   }
 
   async function refreshViews() {
     try {
       const next = await getViews('peek');
-      if (next > lastGoodValue) animateTo(next, 700);
-      else setCount(lastGoodValue);
+      if (next > lastGoodValue) animateTo(next, 700, false);
+      else if (initialized) write(lastGoodValue);
     } catch {}
   }
 
-  window.initLiveViews = initViews;
-  setCount(START_VALUE);
-  initViews();
-  setTimeout(initViews, 1200);
+  function playMusic() {
+    if (!music) return;
+    music.muted = false;
+    music.volume = Math.max(0, Math.min(1, Number(document.getElementById('volumeSlider')?.value || 72) / 100));
+    music.play().catch(() => {});
+  }
+
+  function enterSite(event) {
+    if (!enterScreen || enterScreen.classList.contains('hidden')) return;
+    event?.preventDefault?.();
+    event?.stopImmediatePropagation?.();
+    event?.stopPropagation?.();
+    enterScreen.classList.add('hidden');
+    playMusic();
+    viewCount.textContent = '0';
+    currentValue = 0;
+    setTimeout(() => initViews({ fromZero: true }), 120);
+  }
+
+  document.addEventListener('click', event => {
+    if (event.target.closest('#enterScreen')) enterSite(event);
+  }, true);
+
+  document.addEventListener('keydown', event => {
+    if (!enterScreen || enterScreen.classList.contains('hidden')) return;
+    if (event.key === 'Enter' || event.key === ' ') enterSite(event);
+  }, true);
+
+  window.initLiveViews = (options = {}) => initViews(options);
+  write(0, true);
   setInterval(refreshViews, 15000);
 })();
