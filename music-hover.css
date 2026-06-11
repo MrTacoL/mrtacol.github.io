@@ -1,0 +1,64 @@
+.music-hover {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  max-width: 10.4rem;
+  color: rgba(255,255,255,.82);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.music-hover:hover {
+  color: #fff;
+}
+
+.music-preview {
+  position: absolute;
+  top: calc(100% + .8rem);
+  left: 0;
+  width: 18rem;
+  padding: .55rem;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 1rem;
+  background: rgba(13, 14, 20, .92);
+  box-shadow: 0 1.4rem 3.5rem rgba(0,0,0,.55), 0 0 2rem rgba(101,239,255,.12);
+  backdrop-filter: blur(18px) saturate(1.15);
+  opacity: 0;
+  transform: translateY(-.35rem) scale(.96);
+  visibility: hidden;
+  pointer-events: none;
+  transition: .18s ease;
+}
+
+.music-hover:hover .music-preview,
+.music-hover:focus-visible .music-preview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.music-preview iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: .72rem;
+  background: #000;
+}
+
+.music-preview span {
+  display: block;
+  padding: .5rem .25rem .1rem;
+  font-size: .72rem;
+  font-weight: 900;
+  color: rgba(255,255,255,.72);
+}
+
+@media (max-width: 650px) {
+  .music-preview {
+    width: min(18rem, calc(100vw - 1.6rem));
+    left: -.15rem;
+  }
+}
