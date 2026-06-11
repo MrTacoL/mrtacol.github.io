@@ -128,27 +128,21 @@
 .socials a::before {
   content: "";
   display: block;
-  width: 1.45rem;
-  height: 1.45rem;
-  background-color: currentColor;
+  width: 1.5rem;
+  height: 1.5rem;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  filter: brightness(0) saturate(100%);
 }
 
-.socials a[title="Discord"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/discord"); mask-image: url("https://cdn.simpleicons.org/discord"); }
-.socials a[title="YouTube"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/youtube"); mask-image: url("https://cdn.simpleicons.org/youtube"); }
-.socials a[title="TikTok"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/tiktok"); mask-image: url("https://cdn.simpleicons.org/tiktok"); }
-.socials a[title="Roblox"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/roblox"); mask-image: url("https://cdn.simpleicons.org/roblox"); }
-.socials a[title="Minecraft"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/minecraft"); mask-image: url("https://cdn.simpleicons.org/minecraft"); }
-.socials a[title="GitHub"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/github"); mask-image: url("https://cdn.simpleicons.org/github"); }
-.socials a[title="Steam"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/steam"); mask-image: url("https://cdn.simpleicons.org/steam"); }
+.socials a[title="Discord"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg"); }
+.socials a[title="YouTube"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg"); }
+.socials a[title="TikTok"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg"); }
+.socials a[title="Roblox"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/roblox.svg"); }
+.socials a[title="Minecraft"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/minecraft.svg"); }
+.socials a[title="GitHub"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg"); }
+.socials a[title="Steam"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/steam.svg"); }
 
 @keyframes bigMusicFloat {
   0%, 100% { transform: translateY(0) scale(1) rotate(-2deg); }
