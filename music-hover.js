@@ -130,23 +130,52 @@
   const videoSrc = `${base}?${params.toString()}`;
 
   let closeTimer;
+  let pinnedOpen = false;
+  let mouseInside = false;
 
-  function showPreview() {
+  function openPreview() {
     clearTimeout(closeTimer);
     hover.classList.add('is-hovering');
     frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; web-share');
     if (frame.src !== videoSrc) frame.src = videoSrc;
   }
 
-  function hidePreview() {
+  function closePreview() {
+    clearTimeout(closeTimer);
+    pinnedOpen = false;
+    hover.classList.remove('is-hovering');
+    frame.removeAttribute('src');
+  }
+
+  function scheduleClose() {
+    clearTimeout(closeTimer);
     closeTimer = setTimeout(() => {
-      hover.classList.remove('is-hovering');
-      frame.removeAttribute('src');
+      if (!pinnedOpen && !mouseInside) closePreview();
     }, 180);
   }
 
-  hover.addEventListener('mouseenter', showPreview);
-  hover.addEventListener('mouseleave', hidePreview);
-  hover.addEventListener('focus', showPreview);
-  hover.addEventListener('blur', hidePreview);
+  hover.addEventListener('mouseenter', () => {
+    mouseInside = true;
+    openPreview();
+  });
+
+  hover.addEventListener('mouseleave', () => {
+    mouseInside = false;
+    if (!pinnedOpen) scheduleClose();
+  });
+
+  hover.addEventListener('click', (event) => {
+    event.stopPropagation();
+    pinnedOpen = !pinnedOpen;
+    if (pinnedOpen) openPreview();
+    else closePreview();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (pinnedOpen && !hover.contains(event.target)) closePreview();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && pinnedOpen) closePreview();
+  });
 })();
