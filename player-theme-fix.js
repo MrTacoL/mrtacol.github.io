@@ -4,7 +4,7 @@
     .music-page-toggle{position:fixed;left:1rem;bottom:1rem;z-index:95;border:0;border-radius:999px;padding:.72rem 1rem;font-size:.78rem;font-weight:950;letter-spacing:.02em;color:#101116;background:linear-gradient(135deg,#65efff,#ff0b72);box-shadow:0 .75rem 1.8rem rgba(0,0,0,.4),0 0 1rem rgba(101,239,255,.24);cursor:pointer}
     .sound-panel.player-loaded,.sound-panel.player-on{position:fixed!important;left:50%!important;bottom:4.8rem!important;top:auto!important;transform:translateX(-50%)!important;width:min(34rem,94vw)!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;display:block!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;z-index:90!important}
     body.music-mode-open .sound-panel.player-loaded,body.music-mode-open .sound-panel.player-on{opacity:1!important;visibility:visible!important;pointer-events:auto!important}
-    @media(min-width:651px){body.music-mode-open .sound-panel.player-loaded,body.music-mode-open .sound-panel.player-on{top:1rem!important;bottom:auto!important}}
+    @media(min-width:651px){body.music-mode-open .sound-panel.player-loaded,body.music-mode-open .sound-panel.player-on{top:1rem!important;bottom:auto!important}.sound-panel.drag-ready .music-console{cursor:grab}.sound-panel.dragging .music-console{cursor:grabbing!important;user-select:none!important}}
     .sound-panel .sound-toggle,.sound-panel .music-title,.sound-panel .sound-stack>.volume-slider{display:none!important}.sound-panel .sound-stack{display:block!important;width:100%!important;min-width:0!important}
     .sound-panel .music-console{width:100%!important;padding:.9rem!important;border-radius:1.55rem!important;background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.045))!important;box-shadow:.75rem .75rem 2rem rgba(0,0,0,.52),-.35rem -.35rem 1.2rem rgba(255,255,255,.06),inset 0 0 0 1px rgba(255,255,255,.13)!important;backdrop-filter:blur(20px) saturate(1.25)!important}
     .sound-panel .music-topline{display:grid!important;grid-template-columns:4.25rem minmax(0,1fr) minmax(9rem,12rem)!important;align-items:center!important;text-align:left!important;gap:.65rem!important}.sound-panel .music-disc{width:4.25rem!important;height:4.25rem!important;border-radius:50%!important;background:radial-gradient(circle,#fff 0 10%,#111217 11% 21%,#65efff 22% 26%,#1a1c27 27% 58%,#ff0b72 59% 67%,#080910 68%)!important;box-shadow:inset .15rem .15rem .45rem rgba(255,255,255,.4),inset -.15rem -.15rem .45rem rgba(0,0,0,.5),0 0 1rem rgba(101,239,255,.22)!important}
@@ -15,11 +15,46 @@
   `;
   document.head.appendChild(css);
 
+  function setupDrag(soundPanel, player){
+    if(soundPanel.dataset.dragReady==='true')return;
+    soundPanel.dataset.dragReady='true';
+    soundPanel.classList.add('drag-ready');
+    const saved=JSON.parse(localStorage.getItem('musicPlayerPosition')||'null');
+    if(saved&&window.matchMedia('(min-width:651px)').matches){
+      soundPanel.style.left=saved.left+'px';
+      soundPanel.style.top=saved.top+'px';
+      soundPanel.style.bottom='auto';
+      soundPanel.style.transform='none';
+    }
+    let startX=0,startY=0,startLeft=0,startTop=0,drag=false;
+    player.addEventListener('pointerdown',(event)=>{
+      if(!window.matchMedia('(min-width:651px)').matches)return;
+      if(event.target.closest('button,select,input,a,iframe'))return;
+      const rect=soundPanel.getBoundingClientRect();
+      drag=true;startX=event.clientX;startY=event.clientY;startLeft=rect.left;startTop=rect.top;
+      soundPanel.classList.add('dragging');
+      soundPanel.style.left=rect.left+'px';soundPanel.style.top=rect.top+'px';soundPanel.style.bottom='auto';soundPanel.style.transform='none';
+      player.setPointerCapture(event.pointerId);
+    });
+    player.addEventListener('pointermove',(event)=>{
+      if(!drag)return;
+      const width=soundPanel.offsetWidth,height=soundPanel.offsetHeight;
+      const left=Math.max(8,Math.min(window.innerWidth-width-8,startLeft+event.clientX-startX));
+      const top=Math.max(8,Math.min(window.innerHeight-height-8,startTop+event.clientY-startY));
+      soundPanel.style.left=left+'px';soundPanel.style.top=top+'px';
+    });
+    player.addEventListener('pointerup',()=>{
+      if(!drag)return;drag=false;soundPanel.classList.remove('dragging');
+      localStorage.setItem('musicPlayerPosition',JSON.stringify({left:parseFloat(soundPanel.style.left)||16,top:parseFloat(soundPanel.style.top)||16}));
+    });
+  }
+
   function setupMusicMode(){
     const soundPanel=document.querySelector('.sound-panel');
     const player=document.querySelector('.music-console');
     if(!soundPanel||!player)return;
     soundPanel.classList.add('player-loaded','player-open');
+    setupDrag(soundPanel,player);
     if(!document.querySelector('.music-page-toggle')){
       const btn=document.createElement('button');
       btn.type='button';
