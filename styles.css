@@ -114,7 +114,6 @@ body::before {
   display: grid;
   place-items: center;
   color: #fff;
-  font-size: 1.45rem;
   background: transparent;
   cursor: pointer;
   transition: .18s ease;
@@ -124,6 +123,21 @@ body::before {
 .sound-toggle:hover {
   transform: translateY(-1px) scale(1.03);
   background: rgba(255, 255, 255, .1);
+}
+
+.icon-wrap,
+.sound-toggle svg,
+.socials svg,
+.device-icon svg {
+  display: block;
+}
+
+.icon-wrap svg,
+.sound-toggle svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  fill: currentColor;
+  filter: drop-shadow(0 0 .45rem rgba(255, 255, 255, .35));
 }
 
 .volume-slider {
@@ -290,12 +304,18 @@ body::before {
   border-radius: .85rem;
   display: grid;
   place-items: center;
-  font-size: 1.7rem;
   color: var(--blue);
   background: rgba(18, 34, 45, .74);
   border: 1px solid rgba(101, 239, 255, .16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
   overflow: hidden;
+}
+
+.device-icon svg {
+  width: 1.9rem;
+  height: 1.9rem;
+  fill: currentColor;
+  filter: drop-shadow(0 0 .5rem rgba(101, 239, 255, .5));
 }
 
 .device-icon.has-art {
@@ -304,6 +324,8 @@ body::before {
   background-position: center;
   border-color: rgba(255, 255, 255, .18);
 }
+
+.device-icon.has-art svg { display: none; }
 
 .socials {
   display: flex;
@@ -318,7 +340,7 @@ body::before {
   display: grid;
   place-items: center;
   text-decoration: none;
-  color: #161616;
+  color: #fff;
   background: rgba(255, 255, 255, .94);
   font-weight: 900;
   font-size: .78rem;
@@ -326,8 +348,15 @@ body::before {
   transition: .18s ease;
 }
 
+.socials svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  fill: #1b1b1f;
+}
+
 .socials a:hover {
   transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, .5), 0 0 1.7rem rgba(255, 255, 255, .38);
 }
 
 .connect-discord { display: none; }
