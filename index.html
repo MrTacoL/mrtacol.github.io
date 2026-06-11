@@ -20,15 +20,7 @@
       animation:nameFlow 4s linear infinite,nameFloat 3s ease-in-out infinite;
       filter:drop-shadow(0 0 .7rem rgba(101,239,255,.38)) drop-shadow(0 0 1.1rem rgba(255,11,114,.22));
     }
-    .name::before,.name::after{
-      content:attr(data-text);
-      position:absolute;
-      inset:0;
-      z-index:-1;
-      opacity:0;
-      color:#fff;
-      pointer-events:none;
-    }
+    .name::before,.name::after{content:attr(data-text);position:absolute;inset:0;z-index:-1;opacity:0;color:#fff;pointer-events:none;}
     .name::before{ text-shadow:.08rem 0 #65efff; animation:nameGlitch 2.7s infinite; }
     .name::after{ text-shadow:-.08rem 0 #ff0b72; animation:nameGlitch 3.1s infinite reverse; }
     .name:hover::before,.name:hover::after{ opacity:.75; }
@@ -39,90 +31,13 @@
   </style>
 </head>
 <body>
-  <div class="background"></div>
-  <div class="vignette"></div>
-  <div class="grain"></div>
-  <video class="car" autoplay muted loop playsinline preload="auto">
-    <source src="./assets/white-toyota-drifting.3840x2160.mp4?v=1" type="video/mp4" />
-  </video>
+  <div class="background"></div><div class="vignette"></div><div class="grain"></div>
+  <video class="car" autoplay muted loop playsinline preload="auto"><source src="./assets/white-toyota-drifting.3840x2160.mp4?v=1" type="video/mp4" /></video>
   <canvas id="weatherCanvas" aria-hidden="true"></canvas>
-
-  <section class="enter-screen" id="enterScreen" aria-label="Enter site">
-    <button class="enter-card" id="enterButton" type="button">
-      <span class="enter-title">mrtacosi</span>
-      <span class="enter-subtitle">click to enter</span>
-      <span class="enter-note">music starts after one click</span>
-    </button>
-  </section>
-
-  <div class="sound-panel" aria-label="Music volume control">
-    <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound" type="button">
-      <span id="soundIcon" class="icon-wrap">♪</span>
-    </button>
-    <div class="sound-stack">
-      <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" />
-      <span class="music-title music-hover" id="musicTitle" tabindex="0" aria-label="Hover to preview music video">
-        <span class="song-label">♪ PLAZA - Personal</span>
-        <span class="music-preview" aria-hidden="true">
-          <iframe id="musicPreviewFrame" src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" data-src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" title="PLAZA - Personal music video" loading="lazy" allowfullscreen></iframe>
-          <span>Preview starts at 3:02</span>
-        </span>
-      </span>
-    </div>
-  </div>
-
-  <main class="stage">
-    <section class="profile" aria-label="Profile card">
-      <h1 class="name" id="profileName" data-text="mrtacosi">mrtacosi</h1>
-      <p class="about-line">Developer • Minecraft Mods Creator • Larix Network</p>
-
-      <div class="activity-card" id="activityCard" aria-label="Discord profile card">
-        <a class="avatar-link" id="discordProfileLink" href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" aria-label="Open Discord profile">
-          <div class="avatar-fallback" id="avatar" aria-hidden="true">Z</div>
-          <div class="status-dot" id="statusDot" aria-hidden="true"></div>
-        </a>
-        <div class="activity-text">
-          <strong><span id="discordName">mrtacosi</span><span class="discord-badge">◆</span></strong>
-          <span id="activityLine">Loading Discord</span>
-          <small id="activitySubline">Checking live status</small>
-        </div>
-        <button class="copy-discord" id="copyDiscord" type="button" aria-label="Copy Discord username">Copy</button>
-        <div class="device-icon" id="activityIcon" aria-hidden="true">⌨</div>
-      </div>
-
-      <nav class="socials" aria-label="Social links">
-        <a href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" title="Discord" aria-label="Discord"><img src="./assets/icons/discord.png" alt="Discord" loading="lazy" /></a>
-        <a href="https://youtube.com/@mrtacosi" target="_blank" rel="noreferrer" title="YouTube" aria-label="YouTube"><img src="./assets/icons/youtube.png" alt="YouTube" loading="lazy" /></a>
-        <a href="https://www.tiktok.com/@mrtacosi" target="_blank" rel="noreferrer" title="TikTok" aria-label="TikTok"><img src="./assets/icons/tiktok.png" alt="TikTok" loading="lazy" /></a>
-        <a href="https://www.roblox.com/" target="_blank" rel="noreferrer" title="Roblox" aria-label="Roblox"><img src="./assets/icons/roblox.png" alt="Roblox" loading="lazy" /></a>
-        <a href="https://www.minecraft.net/" target="_blank" rel="noreferrer" title="Minecraft" aria-label="Minecraft"><img src="./assets/icons/minecraft.png" alt="Minecraft" loading="lazy" /></a>
-        <a href="https://github.com/MrTacoL" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub"><img src="./assets/icons/github.png" alt="GitHub" loading="lazy" /></a>
-        <a href="https://steamcommunity.com/" target="_blank" rel="noreferrer" title="Steam" aria-label="Steam"><img src="./assets/icons/steam.png" alt="Steam" loading="lazy" /></a>
-      </nav>
-
-      <div class="action-row">
-        <button class="project-button" id="projectsButton" type="button">Projects</button>
-        <div class="views" aria-label="Live views">👁 <span id="viewCount">0</span></div>
-      </div>
-    </section>
-  </main>
-
-  <section class="projects-modal" id="projectsModal" hidden aria-label="Projects popup">
-    <div class="projects-backdrop" data-close-projects></div>
-    <div class="projects-panel">
-      <button class="projects-close" data-close-projects type="button">×</button>
-      <h2>Projects</h2>
-      <div class="project-grid">
-        <article><strong>Larix KitPvP Owner</strong><span>Owner and lead developer for Larix KitPvP, including kits, crates, vaults, gens, economy, events, UI, and server systems.</span></article>
-        <article><strong>Kum PvP Developer</strong><span>Developer for Kum PvP, working on gameplay systems, menus, balancing, scripts, and PvP features.</span></article>
-        <article><strong>Network Experience</strong><span>Server work dating back to 2016 across Mineplex/Hypixel-era communities, minigame networks, and competitive PvP projects.</span></article>
-        <article><strong>Java Server Work</strong><span>Worked on countless Java servers, including plugin setup, configs, ranks, shops, kits, crates, scoreboards, and performance tuning.</span></article>
-        <article><strong>Minecraft Addons</strong><span>Bedrock scripts, custom items, mobs, menus, resource packs, GUIs, models, and animations.</span></article>
-        <article><strong>Websites & Branding</strong><span>Profile sites, landing pages, live Discord cards, server branding, changelogs, icons, and release pages.</span></article>
-      </div>
-    </div>
-  </section>
-
+  <section class="enter-screen" id="enterScreen" aria-label="Enter site"><button class="enter-card" id="enterButton" type="button"><span class="enter-title">mrtacosi</span><span class="enter-subtitle">click to enter</span><span class="enter-note">music starts after one click</span></button></section>
+  <div class="sound-panel" aria-label="Music volume control"><button class="sound-toggle" id="soundToggle" aria-label="Toggle sound" type="button"><span id="soundIcon" class="icon-wrap">♪</span></button><div class="sound-stack"><input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" /><span class="music-title music-hover" id="musicTitle" tabindex="0" aria-label="Hover to preview music video"><span class="song-label">♪ PLAZA - Personal</span><span class="music-preview" aria-hidden="true"><iframe id="musicPreviewFrame" src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" data-src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" title="PLAZA - Personal music video" loading="lazy" allowfullscreen></iframe><span>Preview starts at 3:02</span></span></span></div></div>
+  <main class="stage"><section class="profile" aria-label="Profile card"><h1 class="name" id="profileName" data-text="mrtacosi">mrtacosi</h1><p class="about-line">Developer • Minecraft Mods Creator • Larix Network</p><div class="activity-card" id="activityCard" aria-label="Discord profile card"><a class="avatar-link" id="discordProfileLink" href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" aria-label="Open Discord profile"><div class="avatar-fallback" id="avatar" aria-hidden="true">Z</div><div class="status-dot" id="statusDot" aria-hidden="true"></div></a><div class="activity-text"><strong><span id="discordName">mrtacosi</span><span class="discord-badge">◆</span></strong><span id="activityLine">Loading Discord</span><small id="activitySubline">Checking live status</small></div><button class="copy-discord" id="copyDiscord" type="button" aria-label="Copy Discord username">Copy</button><div class="device-icon" id="activityIcon" aria-hidden="true">⌨</div></div><nav class="socials" aria-label="Social links"><a href="https://discord.com/users/828806896089038879" target="_blank" rel="noreferrer" title="Discord" aria-label="Discord"><img src="./assets/icons/discord.png" alt="Discord" loading="lazy" /></a><a href="https://youtube.com/@mrtacosi" target="_blank" rel="noreferrer" title="YouTube" aria-label="YouTube"><img src="./assets/icons/youtube.png" alt="YouTube" loading="lazy" /></a><a href="https://www.tiktok.com/@mrtacosi" target="_blank" rel="noreferrer" title="TikTok" aria-label="TikTok"><img src="./assets/icons/tiktok.png" alt="TikTok" loading="lazy" /></a><a href="https://www.roblox.com/" target="_blank" rel="noreferrer" title="Roblox" aria-label="Roblox"><img src="./assets/icons/roblox.png" alt="Roblox" loading="lazy" /></a><a href="https://www.minecraft.net/" target="_blank" rel="noreferrer" title="Minecraft" aria-label="Minecraft"><img src="./assets/icons/minecraft.png" alt="Minecraft" loading="lazy" /></a><a href="https://github.com/MrTacoL" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub"><img src="./assets/icons/github.png" alt="GitHub" loading="lazy" /></a><a href="https://steamcommunity.com/" target="_blank" rel="noreferrer" title="Steam" aria-label="Steam"><img src="./assets/icons/steam.png" alt="Steam" loading="lazy" /></a></nav><div class="action-row"><button class="project-button" id="projectsButton" type="button">Projects</button><div class="views" aria-label="Live views">👁 <span id="viewCount">0</span></div></div></section></main>
+  <section class="projects-modal" id="projectsModal" hidden aria-label="Projects popup"><div class="projects-backdrop" data-close-projects></div><div class="projects-panel"><button class="projects-close" data-close-projects type="button">×</button><h2>Projects</h2><div class="project-grid"><article><strong>Larix KitPvP Owner</strong><span>Owner and lead developer for Larix KitPvP, including kits, crates, vaults, gens, economy, events, UI, and server systems.</span></article><article><strong>Kum PvP Developer</strong><span>Developer for Kum PvP, working on gameplay systems, menus, balancing, scripts, and PvP features.</span></article><article><strong>Network Experience</strong><span>Server work dating back to 2016 across Mineplex/Hypixel-era communities, minigame networks, and competitive PvP projects.</span></article><article><strong>Java Server Work</strong><span>Worked on countless Java servers, including plugin setup, configs, ranks, shops, kits, crates, scoreboards, and performance tuning.</span></article><article><strong>Minecraft Addons</strong><span>Bedrock scripts, custom items, mobs, menus, resource packs, GUIs, models, and animations.</span></article><article><strong>Websites & Branding</strong><span>Profile sites, landing pages, live Discord cards, server branding, changelogs, icons, and release pages.</span></article></div></div></section>
   <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" preload="auto" loop></audio>
   <script src="./config.js?v=profile-update-1"></script>
   <script src="./script.js?v=activity-icons-3"></script>
@@ -132,6 +47,6 @@
   <script src="./music-playlist.js?v=1"></script>
   <script src="./music-shuffle.js?v=7"></script>
   <script src="./player-theme-fix.js?v=4"></script>
-  <script src="./drag-force-fix.js?v=1"></script>
+  <script src="./drag-force-fix.js?v=2"></script>
 </body>
 </html>
