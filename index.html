@@ -62,8 +62,23 @@
   </main>
 
   <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-5" preload="auto" loop></audio>
-  <script src="./config.js?v=stable-loader-1"></script>
-  <script src="./script.js?v=stable-loader-1"></script>
-  <script src="./views-seed.js?v=views-100212-1"></script>
+  <script src="./config.js?v=stable-loader-2"></script>
+  <script src="./script.js?v=stable-loader-2"></script>
+  <script>
+    (() => {
+      const el = document.getElementById('viewCount');
+      if (!el) return;
+      const base = 100212;
+      const seen = 'mrtacosi:view-seen-100212-v3';
+      const key = 'mrtacosi:view-extra-100212-v3';
+      let extra = Number(localStorage.getItem(key) || '0');
+      if (sessionStorage.getItem(seen) !== '1') {
+        extra += 1;
+        sessionStorage.setItem(seen, '1');
+        localStorage.setItem(key, String(extra));
+      }
+      el.textContent = new Intl.NumberFormat('en-US').format(base + Math.max(0, extra - 1));
+    })();
+  </script>
 </body>
 </html>
