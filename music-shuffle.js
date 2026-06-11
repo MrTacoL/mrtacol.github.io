@@ -7,6 +7,7 @@
 
   const REPO = 'MrTacoL/mrtacol.github.io';
   const AUDIO_EXT = /\.(mp3|ogg|wav|m4a|aac|flac)$/i;
+  const SCAN_PATHS = ['assets/music', 'assets', 'music'];
   const fallback = Array.isArray(window.MRTACOSI_PLAYLIST) ? window.MRTACOSI_PLAYLIST : [];
   let playlist = [], queue = [], queueIndex = 0, currentTrack = null;
   let shuffleOn = true, repeatOn = false, ready = false;
@@ -34,7 +35,7 @@
     <div class="music-controls"><button class="music-control" id="prevTrack" type="button">←</button><button class="music-control main" id="playPauseTrack" type="button">▶</button><button class="music-control" id="nextTrack" type="button">→</button><button class="music-mode active" id="shuffleToggle" type="button">Shuffle</button><button class="music-mode" id="repeatToggle" type="button">Repeat</button></div>
     <select class="music-picker" id="songPicker"><option>Loading songs...</option></select>
     <div class="music-progress-wrap"><div class="music-progress" id="musicProgress"></div></div>
-    <div class="music-bottom"><span class="music-count" id="musicCount">0 songs</span><span class="music-source" id="musicSource">Drop songs in assets/music</span></div>`;
+    <div class="music-bottom"><span class="music-count" id="musicCount">0 songs</span><span class="music-source" id="musicSource">Scanning music folders</span></div>`;
   soundStack.appendChild(panel);
 
   const volumeMount = panel.querySelector('#volumeMount');
@@ -60,7 +61,7 @@
     try{const res=await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?ref=main&t=${Date.now()}`,{cache:'no-store'}); if(!res.ok)return[]; const files=await res.json(); if(!Array.isArray(files))return[]; return files.filter(f=>f.type==='file'&&AUDIO_EXT.test(f.name)).map(f=>({title:cleanTitle(f.name),src:encodedPath(path,f.name),folder:path}));}catch{return[];}
   }
   function rebuildQueue(keep=true){const old=currentTrack?.src; queue=shuffleOn?shuffle(playlist):[...playlist]; if(keep&&old){const found=queue.findIndex(t=>t.src===old); if(found>-1)queueIndex=found;}else queueIndex=0;}
-  function updatePicker(){picker.innerHTML=''; playlist.forEach(t=>{const o=document.createElement('option'); o.value=t.src; o.textContent=t.title; picker.appendChild(o);}); count.textContent=`${playlist.length} song${playlist.length===1?'':'s'}`; source.textContent=playlist.some(t=>t.folder==='assets/music')?'Auto-loaded from assets/music':'Auto-loaded playlist';}
+  function updatePicker(){picker.innerHTML=''; playlist.forEach(t=>{const o=document.createElement('option'); o.value=t.src; o.textContent=t.title; picker.appendChild(o);}); count.textContent=`${playlist.length} song${playlist.length===1?'':'s'}`; source.textContent=`Auto-linked from ${[...new Set(playlist.map(t=>t.folder))].join(', ')}`;}
   function setLabels(track){if(songLabel)songLabel.textContent=`♪ ${track.title}`; nowTitle.textContent=track.title; picker.value=track.src; const live=document.getElementById('liveSong'); if(live)live.textContent=track.title; document.title=`mrtacosi • ${track.title}`;}
   function setTrackByQueue(next, play=true){if(!playlist.length)return; if(!queue.length)rebuildQueue(false); queueIndex=((next%queue.length)+queue.length)%queue.length; currentTrack=queue[queueIndex]; audio.loop=false; audio.src=currentTrack.src; audio.load(); setLabels(currentTrack); if(play){audio.muted=false;audio.play().catch(()=>{});} updateButtons();}
   function setTrackBySrc(src, play=true){const track=playlist.find(t=>t.src===src); if(!track)return; currentTrack=track; rebuildQueue(true); const q=queue.findIndex(t=>t.src===src); queueIndex=q>-1?q:0; audio.loop=false; audio.src=track.src; audio.load(); setLabels(track); if(play){audio.muted=false;audio.play().catch(()=>{});} updateButtons();}
@@ -68,7 +69,7 @@
   function prevTrack(){if(!ready)return; if(audio.currentTime>3){audio.currentTime=0;return;} setTrackByQueue(queueIndex-1,true);}
   function updateButtons(){panel.classList.toggle('playing',!audio.paused&&!audio.ended); playPause.textContent=audio.paused?'▶':'Ⅱ'; shuffleButton.classList.toggle('active',shuffleOn); repeatButton.classList.toggle('active',repeatOn);}
   function updateProgress(){progress.style.width=`${audio.duration?Math.min(100,(audio.currentTime/audio.duration)*100):0}%`; requestAnimationFrame(updateProgress);}
-  async function loadPlaylist(){const detected=[...(await scanPath('assets/music')),...(await scanPath('assets'))]; playlist=uniqueTracks([...detected,...fallback]).filter(t=>AUDIO_EXT.test(t.src)); if(!playlist.length)playlist=fallback; if(!playlist.length){nowTitle.textContent='No songs found';count.textContent='0 songs';source.textContent='Add songs to assets/music';return;} ready=true; updatePicker(); rebuildQueue(false); setTrackByQueue(0,false);}
+  async function loadPlaylist(){const detected=(await Promise.all(SCAN_PATHS.map(scanPath))).flat(); playlist=uniqueTracks([...detected,...fallback]).filter(t=>AUDIO_EXT.test(t.src)); if(!playlist.length)playlist=fallback; if(!playlist.length){nowTitle.textContent='No songs found';count.textContent='0 songs';source.textContent='Add songs to assets/music';return;} ready=true; updatePicker(); rebuildQueue(false); setTrackByQueue(0,false);}
 
   audio.addEventListener('ended',nextTrack); audio.addEventListener('play',updateButtons); audio.addEventListener('pause',updateButtons); audio.addEventListener('loadedmetadata',updateButtons);
   nextButton.addEventListener('click',nextTrack); prevButton.addEventListener('click',prevTrack); playPause.addEventListener('click',()=>{if(audio.paused)audio.play().catch(()=>{});else audio.pause();updateButtons();}); picker.addEventListener('change',()=>setTrackBySrc(picker.value,true)); shuffleButton.addEventListener('click',()=>{shuffleOn=!shuffleOn;rebuildQueue(true);updateButtons();}); repeatButton.addEventListener('click',()=>{repeatOn=!repeatOn;updateButtons();});
