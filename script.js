@@ -24,19 +24,18 @@ const viewCount = document.getElementById('viewCount');
 
 const BASE_VIEWS = 10472918;
 const DISCORD_ID = String(config.discordUserId || '828806896089038879').trim();
-const DISCORD_COPY_TEXT = 'FestiveTaco';
 
 const ICONS = {
-  volumeHigh: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.04v8.08A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.5v2.08A7.5 7.5 0 0 1 18.5 12 7.5 7.5 0 0 1 14 18.42v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.5Z"/></svg>',
-  volumeLow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm13 3a4 4 0 0 0-2-3.46v6.92A4 4 0 0 0 16 12Z"/></svg>',
-  volumeOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm14.7 3 2.15-2.15-1.4-1.42-2.16 2.16-2.15-2.16-1.41 1.42L15.88 12l-2.15 2.15 1.41 1.42 2.15-2.16 2.16 2.16 1.4-1.42L17.71 12Z"/></svg>',
-  keyboard: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-8ZM6.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11ZM7 8h2v2H7V8Zm3 0h2v2h-2V8Zm3 0h2v2h-2V8Zm3 0h1v2h-1V8ZM7 11h1v2H7v-2Zm2 0h2v2H9v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-7 3h8v1H8v-1Z"/></svg>',
-  gamepad: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 8h9.6A5.2 5.2 0 0 1 22 13.2v2.05A3.75 3.75 0 0 1 15.85 18l-1.45-1.3H9.6L8.15 18A3.75 3.75 0 0 1 2 15.25V13.2A5.2 5.2 0 0 1 7.2 8ZM7 11v1.5H5.5V14H7v1.5h1.5V14H10v-1.5H8.5V11H7Zm9.5.25a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm2.2 2.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>',
-  minecraft: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5 12 3l8 3.5v10L12 21l-8-4.5v-10Zm8 5.25 5.9-2.6L12 6.6 6.1 9.15 12 11.75Zm-6 5.1 5 2.8v-6.15l-5-2.25v5.6Zm7 2.8 5-2.8v-5.6l-5 2.25v6.15Z"/></svg>',
-  code: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4Zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4ZM13.2 4l-3 16h1.9l3-16h-1.9Z"/></svg>',
-  music: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 3v12.2A3.2 3.2 0 1 1 16 12.25V7H9v10.2A3.2 3.2 0 1 1 7 14.25V5h11Z"/></svg>',
-  stream: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H8l-4 3v-3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm5 3v7l6-3.5L9 8Z"/></svg>',
-  watch: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm6 3v6l5-3-5-3Z"/></svg>'
+  volumeHigh: '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.04v8.08A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.5v2.08A7.5 7.5 0 0 1 18.5 12 7.5 7.5 0 0 1 14 18.42v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.5Z"/></svg>',
+  volumeLow: '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3Zm13 3a4 4 0 0 0-2-3.46v6.92A4 4 0 0 0 16 12Z"/></svg>',
+  volumeOff: '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3Zm14.7 3 2.15-2.15-1.4-1.42-2.16 2.16-2.15-2.16-1.41 1.42L15.88 12l-2.15 2.15 1.41 1.42 2.15-2.16 2.16 2.16 1.4-1.42L17.71 12Z"/></svg>',
+  keyboard: '<svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-8ZM6.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11ZM7 8h2v2H7V8Zm3 0h2v2h-2V8Zm3 0h2v2h-2V8Zm3 0h1v2h-1V8ZM7 11h1v2H7v-2Zm2 0h2v2H9v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-7 3h8v1H8v-1Z"/></svg>',
+  gamepad: '<svg viewBox="0 0 24 24"><path d="M7.2 8h9.6A5.2 5.2 0 0 1 22 13.2v2.05A3.75 3.75 0 0 1 15.85 18l-1.45-1.3H9.6L8.15 18A3.75 3.75 0 0 1 2 15.25V13.2A5.2 5.2 0 0 1 7.2 8ZM7 11v1.5H5.5V14H7v1.5h1.5V14H10v-1.5H8.5V11H7Zm9.5.25a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm2.2 2.1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/></svg>',
+  minecraft: '<svg viewBox="0 0 24 24"><path d="M4 6.5 12 3l8 3.5v10L12 21l-8-4.5v-10Zm8 5.25 5.9-2.6L12 6.6 6.1 9.15 12 11.75Zm-6 5.1 5 2.8v-6.15l-5-2.25v5.6Zm7 2.8 5-2.8v-5.6l-5 2.25v6.15Z"/></svg>',
+  code: '<svg viewBox="0 0 24 24"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4Zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4ZM13.2 4l-3 16h1.9l3-16h-1.9Z"/></svg>',
+  music: '<svg viewBox="0 0 24 24"><path d="M18 3v12.2A3.2 3.2 0 1 1 16 12.25V7H9v10.2A3.2 3.2 0 1 1 7 14.25V5h11Z"/></svg>',
+  stream: '<svg viewBox="0 0 24 24"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H8l-4 3v-3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm5 3v7l6-3.5L9 8Z"/></svg>',
+  watch: '<svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm6 3v6l5-3-5-3Z"/></svg>'
 };
 
 let width = 0;
@@ -44,10 +43,11 @@ let height = 0;
 let particles = [];
 let musicUnlocked = false;
 let currentIconKey = '';
-let lastViewTarget = 0;
+let viewsAnimated = false;
 
 if (profileName) profileName.textContent = config.profileName || 'mrtacosi';
 if (discordName) discordName.textContent = config.profileName || 'mrtacosi';
+if (viewCount) viewCount.textContent = '0';
 
 function resize() {
   if (!canvas || !ctx) return;
@@ -117,9 +117,40 @@ async function playMusic() {
   updateSoundIcon();
 }
 
+function getViewTarget() {
+  const seenKey = 'mrtacosi:view-seen-profile-v5';
+  const extraKey = 'mrtacosi:view-extra-profile-v5';
+  let extra = Number(localStorage.getItem(extraKey) || '0');
+  if (sessionStorage.getItem(seenKey) !== '1') {
+    extra += 1;
+    sessionStorage.setItem(seenKey, '1');
+    localStorage.setItem(extraKey, String(extra));
+  }
+  return BASE_VIEWS + Math.max(0, extra - 1);
+}
+
+function animateViewsFromZero() {
+  if (!viewCount || viewsAnimated) return;
+  viewsAnimated = true;
+  const formatter = new Intl.NumberFormat('en-US');
+  const target = getViewTarget();
+  const duration = 2200;
+  const started = performance.now();
+  viewCount.textContent = '0';
+  function tick(now) {
+    const progress = Math.min(1, (now - started) / duration);
+    const eased = progress < .5 ? 4 * progress ** 3 : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    viewCount.textContent = formatter.format(Math.floor(target * eased));
+    if (progress < 1) requestAnimationFrame(tick);
+    else viewCount.textContent = formatter.format(target);
+  }
+  requestAnimationFrame(tick);
+}
+
 function enterSite() {
   enterScreen?.classList.add('hidden');
   playMusic();
+  setTimeout(animateViewsFromZero, 160);
 }
 
 function setupMusic() {
@@ -252,37 +283,9 @@ async function loadDiscordPresence() {
   }
 }
 
-function animateNumber(start, end, duration = 1200) {
-  if (!viewCount) return;
-  const formatter = new Intl.NumberFormat('en-US');
-  const started = performance.now();
-  function tick(now) {
-    const progress = Math.min(1, (now - started) / duration);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const value = Math.floor(start + (end - start) * eased);
-    viewCount.textContent = formatter.format(value);
-    if (progress < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function setupViews() {
-  const seenKey = 'mrtacosi:view-seen-profile-v4';
-  const extraKey = 'mrtacosi:view-extra-profile-v4';
-  let extra = Number(localStorage.getItem(extraKey) || '0');
-  if (sessionStorage.getItem(seenKey) !== '1') {
-    extra += 1;
-    sessionStorage.setItem(seenKey, '1');
-    localStorage.setItem(extraKey, String(extra));
-  }
-  const target = BASE_VIEWS + Math.max(0, extra - 1);
-  lastViewTarget = target;
-  animateNumber(0, target, 1300);
-}
-
 function setupCopyButton() {
   copyDiscord?.addEventListener('click', async () => {
-    const text = discordName?.textContent?.trim() || DISCORD_COPY_TEXT;
+    const text = discordName?.textContent?.trim() || 'FestiveTaco';
     try {
       await navigator.clipboard.writeText(text);
       copyDiscord.textContent = 'Copied';
@@ -316,7 +319,6 @@ window.addEventListener('resize', resize);
 resize();
 drawRain();
 setupMusic();
-setupViews();
 setupCopyButton();
 setupProjects();
 loadDiscordPresence();
