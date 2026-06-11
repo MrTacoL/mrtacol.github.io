@@ -10,7 +10,9 @@
   const style = document.createElement('style');
   style.textContent = `
     @media (hover:hover) and (pointer:fine) {
-      html, body, body *, a, button, input, select, textarea, label { cursor: none !important; }
+      html, body, body *, a, button, input, select, textarea, label {
+        cursor: url("${cursor}") 21 21, auto !important;
+      }
       .custom-cursor-img { display:block; }
     }
     .custom-cursor-img {
@@ -18,17 +20,18 @@
       left:0;
       top:0;
       z-index:99999;
-      width:42px;
-      height:42px;
+      width:34px;
+      height:34px;
       pointer-events:none;
       transform:translate(-50%,-50%) scale(1);
-      filter:drop-shadow(0 0 10px rgba(255,255,255,.75)) drop-shadow(0 0 16px rgba(101,239,255,.45));
+      filter:drop-shadow(0 0 8px rgba(255,255,255,.85)) drop-shadow(0 0 14px rgba(101,239,255,.55));
       display:none;
       transition:transform .08s ease, opacity .15s ease;
+      opacity:.95;
     }
     .custom-cursor-img.down { transform:translate(-50%,-50%) scale(.82); }
     .draw-canvas.active { cursor: crosshair !important; }
-    .cursor-glow { opacity:.18 !important; }
+    .cursor-glow { opacity:.12 !important; }
   `;
   document.head.appendChild(style);
 
