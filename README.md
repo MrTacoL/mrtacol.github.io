@@ -1,6 +1,5 @@
 # mrtacosi profile site
 
-Neon rain profile page with a visible car background and Discord presence.
 
 ## Run locally
 
@@ -33,12 +32,12 @@ The sound button is wired to this path:
 assets/music.mp3
 ```
 
-Upload your song file to `assets/music.mp3` and it will play from the sound button.
+Upload your song file to `assets/` and it will play from the sound button.
 
 ## Car
 
 The car is stored at:
 
 ```txt
-assets/neon-car.svg
+assets/w
 ```
