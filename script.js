@@ -15,6 +15,19 @@ const activityIcon = document.getElementById('activityIcon');
 const discordProfileLink = document.getElementById('discordProfileLink');
 const connectDiscord = document.getElementById('connectDiscord');
 
+const ICONS = {
+  volumeHigh: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.04v8.08A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.5v2.08A7.5 7.5 0 0 1 18.5 12 7.5 7.5 0 0 1 14 18.42v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.5Z"/></svg>',
+  volumeLow: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm13 3a4 4 0 0 0-2-3.46v6.92A4 4 0 0 0 16 12Z"/></svg>',
+  volumeOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Zm14.7 3 2.15-2.15-1.4-1.42-2.16 2.16-2.15-2.16-1.41 1.42L15.88 12l-2.15 2.15 1.41 1.42 2.15-2.16 2.16 2.16 1.4-1.42L17.71 12Z"/></svg>',
+  keyboard: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8A2.5 2.5 0 0 1 17.5 17h-11A2.5 2.5 0 0 1 4 14.5v-8ZM6.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-11ZM7 8h2v2H7V8Zm3 0h2v2h-2V8Zm3 0h2v2h-2V8Zm3 0h1v2h-1V8ZM7 11h1v2H7v-2Zm2 0h2v2H9v-2Zm3 0h2v2h-2v-2Zm3 0h2v2h-2v-2Zm-7 3h8v1H8v-1Z"/></svg>',
+  play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg>',
+  music: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 3v12.2A3.2 3.2 0 1 1 16 12.25V7H9v10.2A3.2 3.2 0 1 1 7 14.25V5h11Z"/></svg>',
+  watch: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Zm6 3v6l5-3-5-3Z"/></svg>',
+  stream: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H8l-4 3v-3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm5 3v7l6-3.5L9 8Z"/></svg>',
+  star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.8 6.2L21.5 9l-5 4.55L17.9 20 12 16.65 6.1 20l1.4-6.45L2.5 9l6.7-.8L12 2Z"/></svg>',
+  flag: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l-.8 4L17 11H7v10H5V3Z"/></svg>'
+};
+
 let width = 0;
 let height = 0;
 let particles = [];
@@ -89,14 +102,17 @@ function updateSliderFill() {
 }
 
 function updateSoundIcon() {
-  if (music.paused) {
-    soundIcon.textContent = '🔈';
+  if (music.muted || music.volume <= 0.01) {
+    soundIcon.innerHTML = ICONS.volumeOff;
     return;
   }
 
-  if (music.volume <= 0.01) soundIcon.textContent = '🔇';
-  else if (music.volume < 0.45) soundIcon.textContent = '🔉';
-  else soundIcon.textContent = '🔊';
+  if (music.paused) {
+    soundIcon.innerHTML = ICONS.volumeLow;
+    return;
+  }
+
+  soundIcon.innerHTML = music.volume < 0.45 ? ICONS.volumeLow : ICONS.volumeHigh;
 }
 
 function removeUnlockListeners() {
@@ -126,21 +142,40 @@ async function tryPlayMusic() {
   }
 }
 
+async function primeMusicInstantly() {
+  if (!music.src) return;
+
+  try {
+    music.muted = true;
+    music.volume = 0;
+    await music.play();
+    musicReady = true;
+    autoplayBlocked = false;
+    soundToggle.title = 'Click anywhere to turn music on';
+    updateSoundIcon();
+  } catch {
+    autoplayBlocked = true;
+    updateSoundIcon();
+  }
+}
+
 function setupMusic() {
-  if (!config.musicSrc) {
+  if (!config.musicSrc && !music.getAttribute('src')) {
     soundToggle.classList.add('disabled');
     soundToggle.title = 'Upload your music file to enable music';
     return;
   }
 
-  const musicUrl = new URL(config.musicSrc, window.location.href);
+  const musicUrl = new URL(music.getAttribute('src') || config.musicSrc, window.location.href);
   music.src = musicUrl.href;
   music.loop = true;
   music.autoplay = false;
   music.preload = 'auto';
-  music.volume = sliderValue();
-  music.muted = false;
+  musicReady = true;
   updateSliderFill();
+  updateSoundIcon();
+
+  fetch(musicUrl.href, { cache: 'force-cache' }).catch(() => {});
   music.load();
 
   music.addEventListener('loadedmetadata', () => {
@@ -152,7 +187,6 @@ function setupMusic() {
   music.addEventListener('canplay', () => {
     musicReady = true;
     soundToggle.classList.remove('disabled');
-    soundToggle.title = 'Play music';
   });
 
   music.addEventListener('playing', updateSoundIcon);
@@ -161,16 +195,16 @@ function setupMusic() {
   music.addEventListener('error', () => {
     musicReady = false;
     soundToggle.classList.add('disabled');
-    soundIcon.textContent = '🔇';
+    soundIcon.innerHTML = ICONS.volumeOff;
     soundToggle.title = 'Music file not found or not playable';
   });
 
-  setTimeout(tryPlayMusic, 300);
+  setTimeout(primeMusicInstantly, 80);
 }
 
 if (volumeSlider) {
   volumeSlider.addEventListener('input', () => {
-    music.volume = sliderValue();
+    if (!music.muted) music.volume = sliderValue();
     updateSliderFill();
     updateSoundIcon();
   });
@@ -182,13 +216,13 @@ soundToggle.addEventListener('pointerdown', (event) => {
 
 soundToggle.addEventListener('click', async () => {
   if (!music.src || music.error) {
-    soundIcon.textContent = '🔇';
-    setTimeout(() => (soundIcon.textContent = '🔈'), 650);
+    soundIcon.innerHTML = ICONS.volumeOff;
+    setTimeout(updateSoundIcon, 650);
     return;
   }
 
   try {
-    if (music.paused) {
+    if (music.paused || music.muted || music.volume <= 0.01) {
       await tryPlayMusic();
     } else {
       music.pause();
@@ -196,16 +230,14 @@ soundToggle.addEventListener('click', async () => {
       soundToggle.title = 'Play music';
     }
   } catch {
-    soundIcon.textContent = '🔇';
+    soundIcon.innerHTML = ICONS.volumeOff;
   }
 });
 
 function unlockMusicOnFirstInteraction(event) {
   if (musicUnlocked) return;
   if (event?.target?.closest?.('#soundToggle')) return;
-  if (autoplayBlocked || music.paused) {
-    tryPlayMusic();
-  }
+  tryPlayMusic();
 }
 
 document.addEventListener('pointerdown', unlockMusicOnFirstInteraction);
@@ -228,26 +260,26 @@ const typeLabels = {
 };
 
 const typeIcons = {
-  0: '⌨',
-  1: '▶',
-  2: '♫',
-  3: '◉',
-  4: '✦',
-  5: '⚑'
+  0: ICONS.keyboard,
+  1: ICONS.stream,
+  2: ICONS.music,
+  3: ICONS.watch,
+  4: ICONS.star,
+  5: ICONS.flag
 };
 
-function setActivityIcon(text = '⌨', imageUrl = '') {
+function setActivityIcon(icon = ICONS.keyboard, imageUrl = '') {
   if (!activityIcon) return;
   activityIcon.classList.toggle('has-art', Boolean(imageUrl));
   activityIcon.style.backgroundImage = imageUrl ? `url("${imageUrl}")` : '';
-  activityIcon.textContent = imageUrl ? '' : text;
+  activityIcon.innerHTML = imageUrl ? '' : icon;
 }
 
 function setPresenceFallback(message = '') {
   statusDot.style.background = statusColors.offline;
   activityLine.textContent = config.fallbackActivity || 'Loading Discord';
   activitySubline.textContent = message || config.fallbackSubline || 'Checking live status';
-  setActivityIcon('⌨');
+  setActivityIcon(ICONS.keyboard);
 }
 
 function bestActivity(data) {
@@ -299,31 +331,31 @@ function applyPresence(data) {
 
   const activity = bestActivity(data);
   if (!activity) {
-    activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : (config.fallbackActivity || 'Loading Discord');
-    activitySubline.textContent = data.discord_status === 'offline' ? 'Not currently active' : (config.fallbackSubline || 'Checking live status');
-    setActivityIcon('⌨');
+    activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : (config.fallbackActivity || 'Online');
+    activitySubline.textContent = data.discord_status === 'offline' ? 'Not currently active' : (config.fallbackSubline || 'Active now');
+    setActivityIcon(ICONS.keyboard);
     return;
   }
 
   if (activity.kind === 'spotify') {
     activityLine.textContent = 'Listening to Spotify';
     activitySubline.textContent = `${activity.song || 'Unknown Song'}${activity.artist ? ` • ${activity.artist}` : ''}`;
-    setActivityIcon('♫', activity.album_art_url || '');
+    setActivityIcon(ICONS.music, activity.album_art_url || '');
     return;
   }
 
   const label = typeLabels[activity.type] || 'Using';
-  const icon = typeIcons[activity.type] || '⌨';
+  const icon = typeIcons[activity.type] || ICONS.keyboard;
 
   if (activity.type === 4) {
     activityLine.textContent = 'Custom Status';
-    activitySubline.textContent = activity.state || config.fallbackSubline || 'Checking live status';
+    activitySubline.textContent = activity.state || config.fallbackSubline || 'Active now';
     setActivityIcon(icon, activityAssetUrl(activity));
     return;
   }
 
   activityLine.textContent = `${label} ${activity.name || 'Discord'}`;
-  activitySubline.textContent = [activity.details, activity.state].filter(Boolean).join(' • ') || config.fallbackSubline || 'Checking live status';
+  activitySubline.textContent = [activity.details, activity.state].filter(Boolean).join(' • ') || config.fallbackSubline || 'Active now';
   setActivityIcon(icon, activityAssetUrl(activity));
 }
 
