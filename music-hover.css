@@ -120,6 +120,36 @@
   color: rgba(255,255,255,.74);
 }
 
+.socials a {
+  font-size: 0 !important;
+  color: #151517 !important;
+}
+
+.socials a::before {
+  content: "";
+  display: block;
+  width: 1.45rem;
+  height: 1.45rem;
+  background-color: currentColor;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.socials a[title="Discord"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/discord"); mask-image: url("https://cdn.simpleicons.org/discord"); }
+.socials a[title="YouTube"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/youtube"); mask-image: url("https://cdn.simpleicons.org/youtube"); }
+.socials a[title="TikTok"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/tiktok"); mask-image: url("https://cdn.simpleicons.org/tiktok"); }
+.socials a[title="Roblox"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/roblox"); mask-image: url("https://cdn.simpleicons.org/roblox"); }
+.socials a[title="Minecraft"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/minecraft"); mask-image: url("https://cdn.simpleicons.org/minecraft"); }
+.socials a[title="GitHub"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/github"); mask-image: url("https://cdn.simpleicons.org/github"); }
+.socials a[title="Steam"]::before { -webkit-mask-image: url("https://cdn.simpleicons.org/steam"); mask-image: url("https://cdn.simpleicons.org/steam"); }
+
 @keyframes bigMusicFloat {
   0%, 100% { transform: translateY(0) scale(1) rotate(-2deg); }
   32% { transform: translateY(.55rem) scale(1.025) rotate(1.5deg); }
