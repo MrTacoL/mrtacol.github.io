@@ -7,6 +7,7 @@
   <meta name="description" content="mrtacosi profile page" />
   <link rel="preload" as="audio" href="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" type="audio/mpeg" />
   <link rel="stylesheet" href="./styles.css?v=profile-update-1" />
+  <link rel="stylesheet" href="./music-hover.css?v=1" />
 </head>
 <body>
   <div class="background"></div>
@@ -33,7 +34,12 @@
     </button>
     <div class="sound-stack">
       <input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" />
-      <span class="music-title" id="musicTitle">♪ PLAZA - Personal</span>
+      <a class="music-title music-hover" id="musicTitle" href="https://www.youtube.com/watch?v=EUshgvt7I8U" target="_blank" rel="noreferrer">♪ PLAZA - Personal
+        <span class="music-preview" aria-hidden="true">
+          <iframe src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?controls=1&mute=1&modestbranding=1" title="PLAZA - Personal music video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <span>Click to open music video</span>
+        </span>
+      </a>
     </div>
   </div>
 
