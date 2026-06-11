@@ -123,26 +123,28 @@
 .socials a {
   font-size: 0 !important;
   color: #151517 !important;
+  overflow: hidden;
 }
 
-.socials a::before {
-  content: "";
+.socials a::before,
+.socials a::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+}
+
+.socials a img {
+  width: 1.72rem;
+  height: 1.72rem;
+  object-fit: contain;
   display: block;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: brightness(0) saturate(100%);
+  pointer-events: none;
 }
 
-.socials a[title="Discord"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg"); }
-.socials a[title="YouTube"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg"); }
-.socials a[title="TikTok"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg"); }
-.socials a[title="Roblox"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/roblox.svg"); }
-.socials a[title="Minecraft"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/minecraft.svg"); }
-.socials a[title="GitHub"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg"); }
-.socials a[title="Steam"]::before { background-image: url("https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/steam.svg"); }
+.socials a[title="Minecraft"] img { width: 1.95rem; height: 1.95rem; }
+.socials a[title="YouTube"] img { width: 1.9rem; height: 1.9rem; }
+.socials a[title="Steam"] img { width: 1.85rem; height: 1.85rem; }
+.socials a[title="GitHub"] img { width: 1.85rem; height: 1.85rem; }
 
 @keyframes bigMusicFloat {
   0%, 100% { transform: translateY(0) scale(1) rotate(-2deg); }
@@ -166,4 +168,9 @@
   }
 
   .music-preview span { font-size: .72rem; }
+
+  .socials a img {
+    width: 1.48rem;
+    height: 1.48rem;
+  }
 }
