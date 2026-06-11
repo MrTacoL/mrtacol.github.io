@@ -1,16 +1,27 @@
 (() => {
+  const iconFiles = {
+    Steam: 'steam.png',
+    Minecraft: 'minecraft.png',
+    Discord: 'discord.png',
+    TikTok: 'tiktok.png',
+    YouTube: 'youtube.png',
+    GitHub: 'github.png',
+    Roblox: 'roblox.png'
+  };
+
+  document.querySelectorAll('.socials a[title]').forEach((link) => {
+    const title = link.getAttribute('title');
+    const file = iconFiles[title];
+    if (!file) return;
+    link.innerHTML = `<img src="./assets/icons/${file}" alt="${title}" loading="lazy">`;
+  });
+
   const hover = document.getElementById('musicTitle');
   const frame = document.getElementById('musicPreviewFrame');
   if (!hover || !frame) return;
 
   const base = 'https://www.youtube-nocookie.com/embed/EUshgvt7I8U';
-  const params = new URLSearchParams({
-    start: '182',
-    mute: '1',
-    controls: '1',
-    modestbranding: '1',
-    playsinline: '1'
-  });
+  const params = new URLSearchParams({ start: '182', mute: '1', controls: '1', modestbranding: '1', playsinline: '1' });
   params.set('auto' + 'play', '1');
   const videoSrc = `${base}?${params.toString()}`;
 
