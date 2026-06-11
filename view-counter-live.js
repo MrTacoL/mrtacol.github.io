@@ -1,7 +1,7 @@
 (() => {
   const ENDPOINT = 'https://mrtacosi-view-counter.lonyo423.workers.dev/';
   const START_VALUE = 10472918;
-  const SESSION_KEY = 'mrtacosi:global-view-counted-v3';
+  const SESSION_KEY = 'mrtacosi:global-view-counted-v4';
   const viewCount = document.getElementById('viewCount');
   const enterScreen = document.getElementById('enterScreen');
   const music = document.getElementById('music');
@@ -12,6 +12,7 @@
   let initialized = false;
   let running = false;
   let internalWrite = false;
+  let countUpActive = false;
 
   function comma(value) {
     return new Intl.NumberFormat('en-US').format(Math.max(0, Math.floor(Number(value) || 0)));
@@ -37,15 +38,16 @@
   }
 
   new MutationObserver(() => {
-    if (internalWrite) return;
+    if (internalWrite || countUpActive) return;
     const shown = readShownValue();
     if (shown > 0 && shown < START_VALUE && initialized) write(lastGoodValue || START_VALUE);
   }).observe(viewCount, { childList: true, characterData: true, subtree: true });
 
-  function animateTo(nextValue, duration = 1600, fromZero = false) {
+  function animateTo(nextValue, duration = 2600, fromZero = false) {
     const target = Math.max(START_VALUE, Number(nextValue) || START_VALUE, lastGoodValue || START_VALUE);
     const from = fromZero ? 0 : Math.max(START_VALUE, currentValue || START_VALUE, readShownValue() || START_VALUE);
     const start = performance.now();
+    countUpActive = Boolean(fromZero);
 
     function tick(now) {
       const progress = Math.min(1, (now - start) / duration);
@@ -54,7 +56,10 @@
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       write(from + (target - from) * eased, fromZero);
       if (progress < 1) requestAnimationFrame(tick);
-      else write(target);
+      else {
+        countUpActive = false;
+        write(target);
+      }
     }
 
     requestAnimationFrame(tick);
@@ -74,15 +79,17 @@
       const next = await getViews(alreadyCounted ? 'peek' : 'hit');
       if (!alreadyCounted) sessionStorage.setItem(SESSION_KEY, '1');
       initialized = true;
-      animateTo(next, options.fromZero ? 2200 : 900, Boolean(options.fromZero));
+      animateTo(next, options.fromZero ? 3200 : 900, Boolean(options.fromZero));
     } catch {
+      countUpActive = false;
       if (!initialized) write(START_VALUE);
     } finally {
-      setTimeout(() => { running = false; }, 1200);
+      setTimeout(() => { running = false; }, 900);
     }
   }
 
   async function refreshViews() {
+    if (countUpActive) return;
     try {
       const next = await getViews('peek');
       if (next > lastGoodValue) animateTo(next, 700, false);
@@ -104,9 +111,9 @@
     event?.stopPropagation?.();
     enterScreen.classList.add('hidden');
     playMusic();
-    viewCount.textContent = '0';
     currentValue = 0;
-    setTimeout(() => initViews({ fromZero: true }), 120);
+    write(0, true);
+    setTimeout(() => initViews({ fromZero: true }), 80);
   }
 
   document.addEventListener('click', event => {
