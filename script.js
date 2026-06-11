@@ -24,6 +24,9 @@ const viewCount = document.getElementById('viewCount');
 
 const BASE_VIEWS = 10472918;
 const DISCORD_ID = String(config.discordUserId || '828806896089038879').trim();
+const REPO = 'MrTacoL/mrtacol.github.io';
+const ACTIVITY_IMAGE_FOLDERS = ['assets/icons', 'assets'];
+const ACTIVITY_IMAGE_EXT = /\.(png|webp|jpg|jpeg)$/i;
 
 const ICONS = {
   volumeHigh: '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.04v8.08A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.5v2.08A7.5 7.5 0 0 1 18.5 12 7.5 7.5 0 0 1 14 18.42v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.5Z"/></svg>',
@@ -44,6 +47,8 @@ let particles = [];
 let musicUnlocked = false;
 let currentIconKey = '';
 let viewsAnimated = false;
+let activityImages = [];
+let activityImagesLoaded = false;
 
 if (profileName) profileName.textContent = config.profileName || 'mrtacosi';
 if (discordName) discordName.textContent = config.profileName || 'mrtacosi';
@@ -184,6 +189,56 @@ function setStatus(status = 'offline') {
   }
 }
 
+function normalizeActivityText(value = '') {
+  return decodeURIComponent(String(value)).toLowerCase().replace(/\.(png|webp|jpg|jpeg)$/i, '').replace(/[^a-z0-9]+/g, ' ').replace(/\b(icon|logo|transparent|free|png|webp|jpg|jpeg)\b/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function activitySearchText(activity) {
+  return normalizeActivityText(`${activity?.name || ''} ${activity?.details || ''} ${activity?.state || ''}`);
+}
+
+function encodedLocalImage(folder, name) {
+  return `./${folder}/${encodeURIComponent(name).replace(/%2F/g, '/')}`;
+}
+
+async function scanActivityImageFolder(folder) {
+  try {
+    const response = await fetch(`https://api.github.com/repos/${REPO}/contents/${folder}?ref=main&t=${Date.now()}`, { cache: 'no-store' });
+    if (!response.ok) return [];
+    const files = await response.json();
+    if (!Array.isArray(files)) return [];
+    return files.filter(file => file.type === 'file' && ACTIVITY_IMAGE_EXT.test(file.name)).map(file => ({
+      key: normalizeActivityText(file.name),
+      url: encodedLocalImage(folder, file.name)
+    }));
+  } catch {
+    return [];
+  }
+}
+
+async function loadActivityImages() {
+  if (activityImagesLoaded) return;
+  activityImagesLoaded = true;
+  activityImages = (await Promise.all(ACTIVITY_IMAGE_FOLDERS.map(scanActivityImageFolder))).flat();
+}
+
+function findActivityImage(...queries) {
+  const normalizedQueries = queries.map(normalizeActivityText).filter(Boolean);
+  return activityImages.find(image => normalizedQueries.some(query => image.key.includes(query) || query.includes(image.key)));
+}
+
+function localActivityImage(activity) {
+  const text = activitySearchText(activity);
+  if (!activity) return '';
+  if (text.includes('minecraft')) return (findActivityImage('minecraft')?.url || './assets/icons/minecraft.png');
+  if (text.includes('visual studio code') || text.includes('vscode') || text.includes('vs code')) return (findActivityImage('visual studio code', 'vscode', 'vs code', 'code')?.url || '');
+  const match = activityImages.find(image => {
+    const words = image.key.split(' ').filter(word => word.length >= 3);
+    return image.key.length >= 3 && (text.includes(image.key) || (words.length > 0 && words.every(word => text.includes(word))));
+  });
+  return match?.url || '';
+}
+
 function setActivityIcon(key, svg) {
   if (!activityIcon || currentIconKey === key) return;
   currentIconKey = key;
@@ -193,14 +248,18 @@ function setActivityIcon(key, svg) {
 }
 
 function isMinecraft(activity) {
-  const text = `${activity?.name || ''} ${activity?.details || ''} ${activity?.state || ''}`.toLowerCase();
-  return text.includes('minecraft');
+  return activitySearchText(activity).includes('minecraft');
+}
+
+function isCodeActivity(activity) {
+  const text = activitySearchText(activity);
+  return text.includes('visual studio code') || text.includes('vscode') || text.includes('vs code') || text === 'code';
 }
 
 function pickIcon(activity) {
-  const text = `${activity?.name || ''} ${activity?.details || ''} ${activity?.state || ''}`.toLowerCase();
+  const text = activitySearchText(activity);
+  if (isCodeActivity(activity)) return ['code', ICONS.code];
   if (text.includes('minecraft')) return ['minecraft', ICONS.minecraft];
-  if (text.includes('code') || text.includes('visual studio')) return ['code', ICONS.code];
   if (activity?.type === 2 || text.includes('spotify')) return ['music', ICONS.music];
   if (activity?.type === 1) return ['stream', ICONS.stream];
   if (activity?.type === 3) return ['watch', ICONS.watch];
@@ -240,9 +299,15 @@ function applyPresence(data) {
   }
 
   const activities = data.activities || [];
-  const activity = data.spotify
-    ? { type: 2, name: 'Spotify', details: data.spotify.song, state: data.spotify.artist, spotifyArt: data.spotify.album_art_url }
-    : (activities.find(a => a.type === 0) || activities.find(a => a.type === 2) || activities.find(a => a.type === 1) || activities.find(a => a.type === 3) || activities.find(a => a.type === 4));
+  const spotifyActivity = data.spotify ? { type: 2, name: 'Spotify', details: data.spotify.song, state: data.spotify.artist, spotifyArt: data.spotify.album_art_url } : null;
+  const activity = activities.find(isCodeActivity)
+    || activities.find(isMinecraft)
+    || activities.find(a => a.type === 0)
+    || spotifyActivity
+    || activities.find(a => a.type === 2)
+    || activities.find(a => a.type === 1)
+    || activities.find(a => a.type === 3)
+    || activities.find(a => a.type === 4);
 
   if (!activity) {
     if (activityLine) activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : 'Online';
@@ -255,7 +320,7 @@ function applyPresence(data) {
   if (activityLine) activityLine.textContent = isMinecraft(activity) ? 'Playing Minecraft' : `${labels[activity.type] || 'Using'} ${activity.name || 'Discord'}`;
   if (activitySubline) activitySubline.textContent = activityMeta(activity);
 
-  const art = activity.spotifyArt || activityAssetUrl(activity);
+  const art = localActivityImage(activity) || activity.spotifyArt || activityAssetUrl(activity);
   if (art && activityIcon) {
     activityIcon.classList.add('has-art');
     activityIcon.style.backgroundImage = `url("${art}")`;
@@ -269,6 +334,7 @@ function applyPresence(data) {
 
 async function loadDiscordPresence() {
   if (!DISCORD_ID) return;
+  await loadActivityImages();
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 5000);
