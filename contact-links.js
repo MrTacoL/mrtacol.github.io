@@ -2,7 +2,7 @@
   const DISCORD_URL = 'https://discord.com/users/828806896089038879';
   const EMAIL = 'mrtacomm@gmail.com';
   const EMAIL_URL = `mailto:${EMAIL}?subject=Commission%20Request`;
-  const FAVICON_DATA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADJklEQVR42i3BSW/cVADA8f+z3/N79uxbNrKTBA6FkgSJAipbhERvVIhLuXJCSBz4AFz4Ckh8BW6IpYULINFSoSJFlKhqKVHS0Mk408xkMotnxh7bXPj9xEfX3k0trZkIG+XlSaWDl83jP2myOL/E4vwcjxt1hLQ4PzsjGJzT73UIR2P6/QGy+vAxbqVALAypjtC1KTKuTdzskFldQzuaMAxp1E9xPZdCqYgxNsYYBv0OMr3zJxMpsIUNiQ2ZInJlhamZEuedE86zmid+gx++/5EU2HrhWcJJzCAY8sz6AlIoDdEYwRhIsLpDZN0gSi6dTg+ZaxESEZNgtEJph8PjOmkcM0kEcvmzT7GiGMYhk1aPpDfAvrePHo8ZjR5yetCgcqbZzngkUjItbEIvg+N5VDNlZNw4QXkuEYqlD67S3d0juLmLqRZ5tL/POy+9ylY0YqsbY7CIfn6A0IZJzaG3lkW2v/wKEY9xr+ww2rrAyedfUBkE1C9nmesVeXFznXJBcNgPSXd9SuGIQFoYVyNafaQyhnR5lac/+ZDmjV/QszUmJcVJ2ublnQxWeZ87f0vm1pYY9RR7xuN6/RFq0uWNwTlyaAuKO68g+iHWyiLm4w0se0Dl6DuCrkXQLrGwGBE6ZQ4ys3z96y1qC7N0O11+CtpIcXEdq36M/823DF0Xhc3e4QOGTpPtt2uoSoeklyG6cZff/SbZSpVL25vUGyc06i3kbXuCDs7otXycTI5U2vzx1z1migmFxQI3fztgeX6d676P32xTDmP8Vov2ICRxHASQ8r98zqVSytFoPKFSybKxsUaUaITtUs1q8rk83WCIdj2mq1NM16rIK29eQilNPp9DKwVJRKfbZTw55fnNWXbvNrn23nMwXiAKwc24KK3BNsSWgyxPzbG6/BQVL4ctBEJYGCn5x/8Xz9hcWC2yfzxirZwiLUEYhkxSECLF8RTy6vvbvH75IrdvHXF/94hqwSOKIlZmFtBKMe1GnPZDbCFxXIXjebj5PI720G4e+dZrG7iu4v6RTxAnSGOQjsE1DpZtoYxho5hHKQdbaSzHQSoHKTVJavMfpEw+hpO1ppYAAAAASUVORK5CYII=';
+  const FAVICON_HREF = './assets/favicon.png?v=6';
 
   const css = `
     #discordContactButton,#emailContactButton,.socials a.email-link{display:none!important;}
@@ -22,7 +22,7 @@
       const link = document.createElement('link');
       link.rel = rel;
       link.type = type;
-      link.href = FAVICON_DATA;
+      link.href = FAVICON_HREF;
       document.head.appendChild(link);
     });
   }
