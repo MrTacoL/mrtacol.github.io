@@ -4,55 +4,17 @@
   const EMAIL_URL = `mailto:${EMAIL}?subject=Commission%20Request`;
 
   const css = `
-    .action-row a.project-button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;}
-    .socials a.email-link{font-size:1.35rem;font-weight:900;line-height:1;}
+    #discordContactButton,#emailContactButton,.socials a.email-link{display:none!important;}
     .commission-actions a.email-action{background:linear-gradient(135deg,#ffffff,#65efff)!important;color:#0f1016!important;}
   `;
   const style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
 
-  function makeActionLink(id, text, href, newTab = false) {
-    const link = document.createElement('a');
-    link.id = id;
-    link.className = 'project-button contact-button';
-    link.href = href;
-    link.textContent = text;
-    if (newTab) {
-      link.target = '_blank';
-      link.rel = 'noreferrer';
-    }
-    return link;
-  }
-
-  function setupMainButtons() {
-    const row = document.querySelector('.action-row');
-    if (!row) return;
-
-    const projectsButton = document.getElementById('projectsButton') || row.firstElementChild;
-
-    if (!document.getElementById('discordContactButton')) {
-      const discord = makeActionLink('discordContactButton', 'Discord', DISCORD_URL, true);
-      projectsButton?.insertAdjacentElement('afterend', discord);
-    }
-
-    if (!document.getElementById('emailContactButton')) {
-      const email = makeActionLink('emailContactButton', 'Email', EMAIL_URL, false);
-      document.getElementById('discordContactButton')?.insertAdjacentElement('afterend', email);
-    }
-  }
-
-  function setupSocialEmail() {
-    const socials = document.querySelector('.socials');
-    if (!socials || socials.querySelector('.email-link')) return;
-
-    const email = document.createElement('a');
-    email.href = EMAIL_URL;
-    email.className = 'email-link';
-    email.title = 'Email';
-    email.setAttribute('aria-label', 'Email');
-    email.textContent = '✉';
-    socials.appendChild(email);
+  function removeExtraContactButtons() {
+    document.getElementById('discordContactButton')?.remove();
+    document.getElementById('emailContactButton')?.remove();
+    document.querySelectorAll('.socials a.email-link').forEach((link) => link.remove());
   }
 
   function setupCommissionModal() {
@@ -65,6 +27,14 @@
     if (lastParagraph && !lastParagraph.dataset.contactFixed) {
       lastParagraph.dataset.contactFixed = 'true';
       lastParagraph.innerHTML = `<strong>Best way to contact:</strong> Discord @mrtacosi or email ${EMAIL}`;
+    }
+
+    const openDiscord = actions.querySelector('a[href*="discord.com/users/"]');
+    if (openDiscord) {
+      openDiscord.href = DISCORD_URL;
+      openDiscord.target = '_blank';
+      openDiscord.rel = 'noreferrer';
+      openDiscord.textContent = 'Open Discord';
     }
 
     if (!actions.querySelector('.email-action')) {
@@ -85,8 +55,7 @@
   }
 
   function setup() {
-    setupMainButtons();
-    setupSocialEmail();
+    removeExtraContactButtons();
     setupCommissionModal();
     setupDiscordProfileLinks();
   }
@@ -94,4 +63,5 @@
   setup();
   setTimeout(setup, 300);
   setTimeout(setup, 1000);
+  setTimeout(setup, 2000);
 })();
