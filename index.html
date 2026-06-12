@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="./assets/favicon.png?v=5" />
   <link rel="shortcut icon" type="image/png" href="./assets/favicon.png?v=5" />
   <link rel="apple-touch-icon" href="./assets/favicon.png?v=5" />
+  <link rel="preload" as="video" href="./assets/white-toyota-drifting.3840x2160.mp4?v=local-restore-1" type="video/mp4" />
   <link rel="preload" as="audio" href="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" type="audio/mpeg" />
   <link rel="stylesheet" href="./styles.css?v=profile-update-2" />
   <link rel="stylesheet" href="./music-hover.css?v=6" />
@@ -29,7 +30,7 @@
 </head>
 <body>
   <div class="background"></div><div class="vignette"></div><div class="grain"></div>
-  <video class="car" autoplay muted loop playsinline preload="auto"><source src="https://cdn.larixdev.com/white-toyota-drifting.3840x2160.mp4?v=edge-3" type="video/mp4" /></video>
+  <video class="car" autoplay muted loop playsinline webkit-playsinline preload="auto" src="./assets/white-toyota-drifting.3840x2160.mp4?v=local-restore-1"><source src="./assets/white-toyota-drifting.3840x2160.mp4?v=local-restore-1" type="video/mp4" /></video>
   <canvas id="weatherCanvas" aria-hidden="true"></canvas>
   <section class="enter-screen" id="enterScreen" aria-label="Enter site"><button class="enter-card" id="enterButton" type="button"><span class="enter-title">mrtacosi</span><span class="enter-subtitle">click to enter</span><span class="enter-note">music starts after one click</span></button></section>
   <div class="sound-panel" aria-label="Music volume control"><button class="sound-toggle" id="soundToggle" aria-label="Toggle sound" type="button"><span id="soundIcon" class="icon-wrap">♪</span></button><div class="sound-stack"><input id="volumeSlider" class="volume-slider" type="range" min="0" max="100" value="72" aria-label="Volume" /><span class="music-title music-hover" id="musicTitle" tabindex="0" aria-label="Hover to preview music video"><span class="song-label">♪ PLAZA - Personal</span><span class="music-preview" aria-hidden="true"><iframe id="musicPreviewFrame" src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" data-src="https://www.youtube-nocookie.com/embed/EUshgvt7I8U?start=182&mute=1&controls=1&modestbranding=1&playsinline=1" title="PLAZA - Personal music video" loading="lazy" allowfullscreen></iframe><span>Preview starts at 3:02</span></span></span></div></div>
@@ -37,8 +38,8 @@
   <section class="projects-modal" id="projectsModal" hidden aria-label="Projects popup"><div class="projects-backdrop" data-close-projects></div><div class="projects-panel"><button class="projects-close" data-close-projects type="button">×</button><h2>Projects</h2><div class="project-grid"><article><strong>Larix KitPvP Owner</strong><span>Owner and lead developer for Larix KitPvP, including kits, crates, vaults, gens, economy, events, UI, and server systems.</span></article><article><strong>Kum PvP Developer</strong><span>Developer for Kum PvP, working on gameplay systems, menus, balancing, scripts, and PvP features.</span></article><article><strong>Network Experience</strong><span>Server work dating back to 2016 across Mineplex/Hypixel-era communities, minigame networks, and competitive PvP projects.</span></article><article><strong>Java Server Work</strong><span>Worked on countless Java servers, including plugin setup, configs, ranks, shops, kits, crates, scoreboards, and performance tuning.</span></article><article><strong>Minecraft Addons</strong><span>Bedrock scripts, custom items, mobs, menus, resource packs, GUIs, models, and animations.</span></article><article><strong>Websites & Branding</strong><span>Profile sites, landing pages, live Discord cards, server branding, changelogs, icons, and release pages.</span></article></div></div></section>
   <audio id="music" src="./assets/PLAZA%20-%20Personal%20(Official%20Music%20Video)%20-%20(64%20Kbps).mp3?v=64kbps-6" preload="auto" loop></audio>
   <script src="./config.js?v=profile-update-1"></script>
-  <script src="./mobile-video-fix.js?v=1"></script>
-  <script src="./edge-video-fix.js?v=1"></script>
+  <script src="./mobile-video-fix.js?v=2"></script>
+  <script src="./edge-video-fix.js?v=2"></script>
   <script src="./script.js?v=activity-icons-3"></script>
   <script src="./view-counter-live.js?v=4"></script>
   <script src="./music-hover.js?v=draw-mode-2"></script>
