@@ -1,6 +1,6 @@
 (() => {
-  const VERSION = 'car-clean-1';
-  const VIDEO_PATH = './assets/white-toyota-drifting.3840x2160.mp4?v=' + VERSION;
+  const VERSION = 'h264-1';
+  const VIDEO_PATH = './assets/car-drift-1080.mp4?v=' + VERSION;
 
   function forceCarMode() {
     document.body.classList.remove('edge-video-static-fallback', 'video-static-fallback', 'static-fallback');
@@ -31,7 +31,7 @@
     video.style.visibility = 'visible';
     video.style.opacity = '1';
 
-    if (!video.src || !video.src.includes('white-toyota-drifting.3840x2160.mp4') || video.src.includes('cdn.larixdev.com')) {
+    if (!video.src || !video.src.includes('car-drift-1080.mp4') || video.src.includes('cdn.larixdev.com')) {
       video.innerHTML = '';
       const source = document.createElement('source');
       source.src = VIDEO_PATH;
