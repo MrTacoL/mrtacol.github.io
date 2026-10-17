@@ -42,7 +42,6 @@
     }
 
     const play = () => {
-      forceCarMode();
       video.muted = true;
       video.play().catch(() => {});
     };

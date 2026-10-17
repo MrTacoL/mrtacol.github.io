@@ -31,7 +31,7 @@
     localStorage.setItem('mtTheme', theme);
   }
 
-  function applyBg(bg) {
+  function applyBg(bg, silent = false) {
     state.bg = bg;
     body.dataset.bg = bg;
     localStorage.setItem('mtBg', bg);
@@ -43,11 +43,11 @@
       car.style.opacity = bg === 'rain' ? '.72' : '';
       car.style.pointerEvents = 'auto';
     }
-    toast(`Background: ${bg}`);
+    if (!silent) toast(`Background: ${bg}`);
   }
 
   applyTheme(state.theme);
-  applyBg(state.bg);
+  applyBg(state.bg, true);
 
   const dock = document.createElement('div');
   dock.className = 'mt-tool-dock';
@@ -109,12 +109,6 @@
   musicModal.innerHTML = `<div class="mt-card"><button class="mt-close" data-close-modal type="button">×</button><h3>Music Mode</h3><div class="mt-music-head"><div class="mt-music-cover" id="mtMusicCover"></div><div><div class="mt-music-title" id="mtMusicTitle">Loading current song</div><small>currently playing</small></div></div><div class="mt-visualizer" id="mtVisualizer">${'<span></span>'.repeat(20)}</div><div class="mt-progress"><span id="mtMusicProgress"></span></div><div class="mt-music-actions"><button id="mtPrev" type="button">Prev</button><button id="mtPlay" type="button">Play/Pause</button><button id="mtNext" type="button">Next</button><button id="mtSync" type="button">Refresh Playlist</button></div><div class="mt-track-list" id="mtTrackList"></div></div>`;
   document.body.appendChild(musicModal);
 
-  const guestModal = document.createElement('section');
-  guestModal.id = 'mt-guestbook';
-  guestModal.className = 'mt-modal mt-hidden';
-  guestModal.innerHTML = `<div class="mt-card"><button class="mt-close" data-close-modal type="button">×</button><h3>Guestbook</h3><div class="mt-guest-list" id="mtGuestList"></div><form class="mt-guest-form" id="mtGuestForm"><input maxlength="80" placeholder="leave a message" /><button type="submit">Post</button></form><small>Saved on this browser for now.</small></div>`;
-  document.body.appendChild(guestModal);
-
   function closeAllPanels() {
     $$('.mt-panel').forEach(p => p.classList.add('mt-hidden'));
   }
@@ -132,7 +126,6 @@
     }
     if (target === 'console') openConsole();
     if (target === 'music') openMusicMode();
-    if (target === 'guestbook') openGuestbook();
   });
 
   themePanel.addEventListener('click', e => {
@@ -223,34 +216,6 @@
   $('#mtPlay').addEventListener('click', () => $('#playPauseTrack')?.click() || (audio?.paused ? audio.play().catch(() => {}) : audio?.pause()));
   $('#mtNext').addEventListener('click', () => $('#nextTrack')?.click());
   $('#mtSync').addEventListener('click', () => { syncTrackList(); toast('Playlist refreshed'); });
-
-  function getGuestMessages() {
-    return JSON.parse(localStorage.getItem('mtGuestbook') || 'null') || ['yo nice site', 'fire dev', 'larix on top'];
-  }
-  function renderGuestbook() {
-    const list = $('#mtGuestList');
-    list.innerHTML = '';
-    getGuestMessages().slice(-12).reverse().forEach(msg => {
-      const row = document.createElement('div');
-      row.textContent = msg;
-      list.appendChild(row);
-    });
-  }
-  function openGuestbook() {
-    renderGuestbook();
-    guestModal.classList.remove('mt-hidden');
-  }
-  $('#mtGuestForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const input = e.currentTarget.querySelector('input');
-    const text = input.value.trim();
-    if (!text) return;
-    const messages = getGuestMessages();
-    messages.push(text);
-    localStorage.setItem('mtGuestbook', JSON.stringify(messages.slice(-30)));
-    input.value = '';
-    renderGuestbook();
-  });
 
   function setupMoodCard() {
     const profile = $('.profile');

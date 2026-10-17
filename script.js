@@ -161,8 +161,6 @@ function enterSite() {
 function setupMusic() {
   if (!music) return;
   music.preload = 'auto';
-  music.loop = true;
-  music.load();
   updateSliderFill();
   updateSoundIcon();
   enterButton?.addEventListener('click', enterSite);
@@ -341,7 +339,8 @@ async function loadDiscordPresence() {
     const res = await fetch(`https://api.lanyard.rest/v1/users/${encodeURIComponent(DISCORD_ID)}?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal });
     clearTimeout(timer);
     const json = await res.json();
-    if (json.success) applyPresence(json.data);
+    if (!json.success) throw new Error('lanyard unavailable');
+    applyPresence(json.data);
   } catch {
     setStatus('online');
     if (activityLine) activityLine.textContent = 'Online';
@@ -351,7 +350,7 @@ async function loadDiscordPresence() {
 
 function setupCopyButton() {
   copyDiscord?.addEventListener('click', async () => {
-    const text = discordName?.textContent?.trim() || 'FestiveTaco';
+    const text = discordName?.textContent?.trim() || 'mrtacosi';
     try {
       await navigator.clipboard.writeText(text);
       copyDiscord.textContent = 'Copied';

@@ -315,8 +315,8 @@ body::before {
   .activity-text strong { font-size: .92rem; }
   .activity-text span { font-size: .82rem; }
   .activity-text small { font-size: .74rem; }
-  .socials { max-width: 19rem; gap: .55rem; }
-  .socials a { width: 2.55rem; height: 2.55rem; }
+  .socials { max-width: 20rem; gap: .42rem; }
+  .socials a { width: 2.4rem; height: 2.4rem; }
   .project-grid { grid-template-columns: 1fr; }
 }
 

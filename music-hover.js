@@ -294,10 +294,11 @@
     let lastY = 0;
 
     function fitCanvas() {
+      if (!window.innerWidth || !window.innerHeight) return;
       const saved = document.createElement('canvas');
       saved.width = canvas.width;
       saved.height = canvas.height;
-      saved.getContext('2d').drawImage(canvas, 0, 0);
+      if (canvas.width && canvas.height) saved.getContext('2d').drawImage(canvas, 0, 0);
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       canvas.width = Math.floor(window.innerWidth * dpr);
       canvas.height = Math.floor(window.innerHeight * dpr);

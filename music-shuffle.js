@@ -7,7 +7,7 @@
 
   const REPO = 'MrTacoL/mrtacol.github.io';
   const AUDIO_EXT = /\.(mp3|ogg|wav|m4a|aac|flac)$/i;
-  const SCAN_PATHS = ['assets/music', 'assets', 'music'];
+  const SCAN_PATHS = ['assets'];
   const fallback = Array.isArray(window.MRTACOSI_PLAYLIST) ? window.MRTACOSI_PLAYLIST : [];
   let playlist = [], queue = [], queueIndex = 0, currentTrack = null;
   let shuffleOn = true, repeatOn = false, ready = false;
@@ -99,6 +99,7 @@
   function updateProgress(){progress.style.width=`${audio.duration?Math.min(100,(audio.currentTime/audio.duration)*100):0}%`; requestAnimationFrame(updateProgress);}
   async function loadPlaylist(){const detected=(await Promise.all(SCAN_PATHS.map(scanPath))).flat(); playlist=uniqueTracks([...detected,...fallback]).filter(t=>AUDIO_EXT.test(t.src)); if(!playlist.length)playlist=fallback; if(!playlist.length){nowTitle.textContent='No songs found';count.textContent='0 songs';source.textContent='Add songs to assets/music';return;} ready=true; updatePicker(); rebuildQueue(false); setTrackByQueue(0,false);}
 
+  let failedInARow=0; audio.addEventListener('error',()=>{if(audio.src&&++failedInARow<5)nextTrack();}); audio.addEventListener('playing',()=>{failedInARow=0;});
   audio.addEventListener('ended',nextTrack); audio.addEventListener('play',updateButtons); audio.addEventListener('pause',updateButtons); audio.addEventListener('loadedmetadata',updateButtons);
   nextButton.addEventListener('click',nextTrack); prevButton.addEventListener('click',prevTrack); playPause.addEventListener('click',()=>{if(audio.paused)audio.play().catch(()=>{});else audio.pause();updateButtons();}); picker.addEventListener('change',()=>setTrackBySrc(picker.value,true)); shuffleButton.addEventListener('click',()=>{shuffleOn=!shuffleOn;rebuildQueue(true);updateButtons();}); repeatButton.addEventListener('click',()=>{repeatOn=!repeatOn;updateButtons();});
   loadPlaylist(); updateProgress();

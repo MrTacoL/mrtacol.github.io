@@ -2,7 +2,7 @@
   const DISCORD_URL = 'https://discord.com/users/828806896089038879';
   const EMAIL = 'mrtacomm@gmail.com';
   const EMAIL_URL = `mailto:${EMAIL}?subject=Commission%20Request`;
-  const FAVICON_HREF = './assets/favicon.png?v=6';
+  const FAVICON_HREF = './assets/icons/favicon.png?v=6';
 
   const css = `
     #discordContactButton,#emailContactButton,.socials a.email-link{display:none!important;}

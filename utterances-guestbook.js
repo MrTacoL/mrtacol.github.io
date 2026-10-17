@@ -60,11 +60,8 @@
   document.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-open="guestbook"]');
     if (!button) return;
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
     openGuestbook();
-  }, true);
+  });
 
   document.addEventListener('click', (event) => {
     if (event.target.closest('[data-close-modal]')) closeModal(event.target);
