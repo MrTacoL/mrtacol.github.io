@@ -213,7 +213,7 @@
   }
 
   $('#mtPrev').addEventListener('click', () => $('#prevTrack')?.click());
-  $('#mtPlay').addEventListener('click', () => $('#playPauseTrack')?.click() || (audio?.paused ? audio.play().catch(() => {}) : audio?.pause()));
+  $('#mtPlay').addEventListener('click', () => $('#playPauseTrack')?.click());
   $('#mtNext').addEventListener('click', () => $('#nextTrack')?.click());
   $('#mtSync').addEventListener('click', () => { syncTrackList(); toast('Playlist refreshed'); });
 

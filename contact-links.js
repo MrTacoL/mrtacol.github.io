@@ -73,7 +73,6 @@
   function setup() {
     setupFavicon();
     removeExtraContactButtons();
-    setupCommissionModal();
     setupDiscordProfileLinks();
   }
 

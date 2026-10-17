@@ -20,9 +20,7 @@ const discordProfileLink = document.getElementById('discordProfileLink');
 const copyDiscord = document.getElementById('copyDiscord');
 const projectsButton = document.getElementById('projectsButton');
 const projectsModal = document.getElementById('projectsModal');
-const viewCount = document.getElementById('viewCount');
 
-const BASE_VIEWS = 10472918;
 const DISCORD_ID = String(config.discordUserId || '828806896089038879').trim();
 const REPO = 'MrTacoL/mrtacol.github.io';
 const ACTIVITY_IMAGE_FOLDERS = ['assets/icons', 'assets'];
@@ -46,13 +44,11 @@ let height = 0;
 let particles = [];
 let musicUnlocked = false;
 let currentIconKey = '';
-let viewsAnimated = false;
 let activityImages = [];
 let activityImagesLoaded = false;
 
 if (profileName) profileName.textContent = config.profileName || 'mrtacosi';
 if (discordName) discordName.textContent = config.profileName || 'mrtacosi';
-if (viewCount) viewCount.textContent = '0';
 
 function resize() {
   if (!canvas || !ctx) return;
@@ -122,40 +118,9 @@ async function playMusic() {
   updateSoundIcon();
 }
 
-function getViewTarget() {
-  const seenKey = 'mrtacosi:view-seen-profile-v5';
-  const extraKey = 'mrtacosi:view-extra-profile-v5';
-  let extra = Number(localStorage.getItem(extraKey) || '0');
-  if (sessionStorage.getItem(seenKey) !== '1') {
-    extra += 1;
-    sessionStorage.setItem(seenKey, '1');
-    localStorage.setItem(extraKey, String(extra));
-  }
-  return BASE_VIEWS + Math.max(0, extra - 1);
-}
-
-function animateViewsFromZero() {
-  if (!viewCount || viewsAnimated) return;
-  viewsAnimated = true;
-  const formatter = new Intl.NumberFormat('en-US');
-  const target = getViewTarget();
-  const duration = 2200;
-  const started = performance.now();
-  viewCount.textContent = '0';
-  function tick(now) {
-    const progress = Math.min(1, (now - started) / duration);
-    const eased = progress < .5 ? 4 * progress ** 3 : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-    viewCount.textContent = formatter.format(Math.floor(target * eased));
-    if (progress < 1) requestAnimationFrame(tick);
-    else viewCount.textContent = formatter.format(target);
-  }
-  requestAnimationFrame(tick);
-}
-
 function enterSite() {
   enterScreen?.classList.add('hidden');
   playMusic();
-  setTimeout(animateViewsFromZero, 160);
 }
 
 function setupMusic() {
