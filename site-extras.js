@@ -58,6 +58,7 @@
     <button type="button" data-open="guestbook">Guestbook</button>
     <button type="button" data-open="background">BG</button>
     <button type="button" data-open="badges">Badges</button>
+    <button type="button" data-open="arcade">Arcade</button>
   `;
   document.body.appendChild(dock);
 
@@ -126,6 +127,7 @@
     }
     if (target === 'console') openConsole();
     if (target === 'music') openMusicMode();
+    if (target === 'arcade') openArcade();
   });
 
   themePanel.addEventListener('click', e => {
@@ -286,4 +288,28 @@
     driftBlip();
     toast('headlights flashed');
   });
+
+  // Arcade: opens arcade.html in a popup so the music keeps playing
+  const arcadeStyle = document.createElement('style');
+  arcadeStyle.textContent = '.mt-arcade{position:fixed;inset:0;z-index:2650;display:grid;place-items:center;padding:1rem;background:rgba(0,0,0,.6);backdrop-filter:blur(8px)}.mt-arcade[hidden]{display:none}.mt-arcade-card{position:relative;width:min(72rem,100%);height:min(52rem,100%);border:1px solid rgba(255,255,255,.16);border-radius:1.3rem;overflow:hidden;background:#07080c;box-shadow:0 2rem 6rem rgba(0,0,0,.7)}.mt-arcade iframe{width:100%;height:100%;border:0;display:block}.mt-arcade-close{position:absolute;top:.6rem;right:.6rem;z-index:2;width:2.2rem;height:2.2rem;border:1px solid rgba(255,255,255,.18);border-radius:50%;color:#fff;background:rgba(12,13,19,.9);font-size:1.3rem;cursor:pointer}@media(max-width:650px){.mt-arcade{padding:0}.mt-arcade-card{border-radius:0;height:100%}}';
+  document.head.appendChild(arcadeStyle);
+  const arcade = document.createElement('section');
+  arcade.className = 'mt-arcade';
+  arcade.hidden = true;
+  arcade.setAttribute('aria-label', 'Arcade');
+  arcade.innerHTML = '<div class="mt-arcade-card"><button class="mt-arcade-close" type="button" aria-label="Close arcade">×</button><iframe title="mrtacosi arcade"></iframe></div>';
+  document.body.appendChild(arcade);
+  const arcadeFrame = arcade.querySelector('iframe');
+  function openArcade() {
+    if (!arcadeFrame.src) arcadeFrame.src = './arcade.html';
+    arcade.hidden = false;
+    arcadeFrame.focus();
+  }
+  const closeArcade = () => { arcade.hidden = true; };
+  arcade.querySelector('.mt-arcade-close').addEventListener('click', closeArcade);
+  arcade.addEventListener('click', (e) => { if (e.target === arcade) closeArcade(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeArcade(); });
+  $('#arcadeButton')?.addEventListener('click', openArcade);
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 })();

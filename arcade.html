@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mrtacosi arcade</title>
+  <meta name="description" content="50 free browser games by mrtacosi. Works offline." />
+  <link rel="icon" type="image/png" href="./assets/icons/favicon.png?v=6" />
+  <style>
+    :root { --bg:#07080c; --panel:rgba(20,21,30,.86); --line:rgba(255,255,255,.12); --text:#fff; --dim:rgba(255,255,255,.62); --cyan:#65efff; --pink:#ff0b72; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { background: radial-gradient(circle at 15% 0%, rgba(255,11,114,.18), transparent 30rem), radial-gradient(circle at 85% 10%, rgba(101,239,255,.14), transparent 30rem), var(--bg); background-attachment: fixed; }
+    button, input, select { font: inherit; color: inherit; }
+    .wrap { width: min(70rem, 100%); margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+    header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+    h1 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 900; letter-spacing: -.04em; background: linear-gradient(90deg, #fff, var(--cyan), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .sub { margin: .2rem 0 0; color: var(--dim); font-size: .85rem; font-weight: 700; }
+    .back-site { color: var(--dim); font-size: .8rem; font-weight: 800; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: .45rem .8rem; }
+    .in-frame .back-site { display: none; }
+    .controls { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: 1rem; }
+    .search { flex: 1 1 14rem; min-width: 0; height: 2.6rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.06); outline: none; font-weight: 700; }
+    .search:focus { border-color: var(--cyan); }
+    .chip { height: 2.3rem; padding: 0 .95rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.05); font-size: .8rem; font-weight: 800; cursor: pointer; }
+    .chip[aria-pressed="true"] { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #0d0e14; border-color: transparent; }
+    .count { color: var(--dim); font-size: .78rem; font-weight: 800; margin-left: auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: .7rem; }
+    .tile { display: grid; justify-items: start; gap: .25rem; padding: .9rem; border: 1px solid var(--line); border-radius: 1.1rem; background: var(--panel); text-align: left; cursor: pointer; transition: transform .15s ease, border-color .15s ease; }
+    .tile:hover, .tile:focus-visible { transform: translateY(-3px); border-color: rgba(101,239,255,.5); outline: none; }
+    .tile-icon { font-size: 1.9rem; line-height: 1; }
+    .tile-name { font-weight: 900; font-size: .92rem; }
+    .tile-best { font-size: .72rem; font-weight: 700; color: var(--dim); }
+    .empty { color: var(--dim); text-align: center; padding: 2rem; }
+    #play { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; background: var(--bg); }
+    #play[hidden], #home[hidden] { display: none; }
+    .bar { display: flex; align-items: center; gap: .6rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); background: rgba(12,13,19,.9); }
+    .bar h2 { margin: 0; font-size: 1rem; font-weight: 900; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pill { height: 2.2rem; padding: 0 .85rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.07); font-size: .78rem; font-weight: 900; cursor: pointer; white-space: nowrap; }
+    .stat { font-size: .75rem; font-weight: 800; color: var(--dim); white-space: nowrap; }
+    .stat b { color: #fff; font-size: .9rem; }
+    .how { padding: .5rem 1rem; color: var(--dim); font-size: .78rem; font-weight: 700; text-align: center; }
+    .msg { min-height: 1.2rem; padding: 0 1rem .4rem; color: var(--cyan); font-size: .82rem; font-weight: 800; text-align: center; }
+    .stage-wrap { position: relative; flex: 1; min-height: 0; display: grid; place-items: center; padding: .5rem 1rem 1rem; overflow: auto; }
+    #stage { width: 100%; display: grid; place-items: center; touch-action: manipulation; }
+    .ar-canvas { display: block; height: auto; border-radius: 1rem; background: #0b0c12; border: 1px solid var(--line); touch-action: none; user-select: none; -webkit-user-select: none; }
+    .overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(5,6,10,.72); backdrop-filter: blur(6px); }
+    .overlay[hidden] { display: none; }
+    .ov-card { display: grid; gap: .6rem; justify-items: center; padding: 1.4rem 1.6rem; border: 1px solid var(--line); border-radius: 1.3rem; background: var(--panel); text-align: center; }
+    .ov-card h3 { margin: 0; font-size: 1.5rem; font-weight: 900; }
+    .ov-card p { margin: 0; color: var(--dim); font-weight: 800; }
+    .ov-actions { display: flex; gap: .5rem; margin-top: .3rem; }
+    .primary { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #0d0e14; border: 0; }
+    /* shared pieces for the non-canvas games */
+    .g { display: grid; gap: .8rem; justify-items: center; width: min(32rem, 100%); }
+    .g-grid { display: grid; gap: .35rem; width: 100%; }
+    .g-cell { aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: .55rem; background: rgba(255,255,255,.06); font-weight: 900; font-size: clamp(.8rem, 3.5vw, 1.3rem); cursor: pointer; user-select: none; }
+    .g-cell:disabled { cursor: default; }
+    .g-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+    .g-btn { min-height: 2.6rem; padding: .5rem 1rem; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.08); font-weight: 900; cursor: pointer; }
+    .g-btn:hover { background: rgba(255,255,255,.14); }
+    .g-btn.primary:hover { filter: brightness(1.1); }
+    .g-big { font-size: clamp(1.6rem, 7vw, 2.8rem); font-weight: 900; text-align: center; }
+    .g-text { color: var(--dim); font-weight: 700; text-align: center; line-height: 1.4; }
+    .g-input { width: 100%; height: 2.8rem; padding: 0 1rem; border: 1px solid var(--line); border-radius: .8rem; background: rgba(255,255,255,.06); font-size: 1rem; font-weight: 800; outline: none; text-align: center; }
+    .g-input:focus { border-color: var(--cyan); }
+    .g-card { display: inline-grid; place-items: center; width: 3.2rem; height: 4.4rem; border-radius: .5rem; background: #f4f5f8; color: #111; font-weight: 900; font-size: 1.1rem; box-shadow: 0 .3rem .8rem rgba(0,0,0,.4); }
+    .g-card.red { color: #d0103a; }
+    .g-card.back { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: transparent; }
+    @media (max-width: 560px) { .stat.best-stat { display: none; } .bar { gap: .4rem; padding: .6rem .7rem; } .pill { padding: 0 .65rem; } }
+  </style>
+</head>
+<body>
+  <main class="wrap" id="home">
+    <header>
+      <div><h1>mrtacosi arcade</h1><p class="sub" id="sub">50 games · scores save on this device · works offline after your first visit</p></div>
+      <a class="back-site" href="./">← Back to site</a>
+    </header>
+    <div class="controls">
+      <input class="search" id="search" type="search" placeholder="Search games" aria-label="Search games" />
+      <div id="chips" class="controls" style="margin:0"></div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>No games match that search.</p>
+  </main>
+  <section id="play" hidden aria-live="polite">
+    <div class="bar">
+      <button class="pill" id="backBtn" type="button">← Games</button>
+      <h2 id="gameName"></h2>
+      <span class="stat">Score <b id="score">0</b></span>
+      <span class="stat best-stat">Best <b id="best">—</b></span>
+      <button class="pill" id="restartBtn" type="button">Restart</button>
+    </div>
+    <div class="how" id="gameHow"></div>
+    <div class="msg" id="gameMsg"></div>
+    <div class="stage-wrap">
+      <div id="stage"></div>
+      <div class="overlay" id="overlay" hidden>
+        <div class="ov-card"><h3 id="ovTitle"></h3><p id="ovText"></p><div class="ov-actions"><button class="pill primary" id="ovAgain" type="button">Play again</button><button class="pill" id="ovBack" type="button">All games</button></div></div>
+      </div>
+    </div>
+  </section>
+  <script src="./arcade.js?v=1"></script>
+  <script src="./games/action-1.js?v=1"></script>
+  <script src="./games/action-2.js?v=1"></script>
+  <script src="./games/puzzle.js?v=1"></script>
+  <script src="./games/board-quick.js?v=1"></script>
+  <script>Arcade.boot();</script>
+</body>
+</html>
