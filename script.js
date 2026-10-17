@@ -308,7 +308,7 @@ function applyPresence(data) {
     || activities.find(a => a.type === 4);
 
   if (!activity) {
-    if (activityLine) activityLine.textContent = data.discord_status === 'offline' ? 'Offline' : 'Online';
+    if (activityLine) activityLine.textContent = { online: 'Online', idle: 'Idle', dnd: 'Do Not Disturb' }[data.discord_status] || 'Offline';
     if (activitySubline) activitySubline.textContent = data.discord_status === 'offline' ? 'Not active' : 'Active now';
     setActivityIcon('keyboard', ICONS.keyboard);
     return;
